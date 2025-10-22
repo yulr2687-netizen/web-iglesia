@@ -1,0 +1,363 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+body {
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+}
+
+.gradient-bg {
+    background: linear-gradient(135deg, #000000 0%, #1a365d 100%);
+}
+
+.skin-bg {
+    background-color: #f8d7c9;
+}
+
+.logo-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #000000, #2d3748);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.carousel {
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+}
+
+.carousel-item {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+}
+
+.modal {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: scale(0.9);
+    opacity: 0;
+}
+
+.modal.active {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.arrow-bounce {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.transport-btn {
+    transition: all 0.3s ease;
+}
+
+.transport-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/*#inicio {
+    /* Fondo: imagen + degradado 
+    background: 
+        linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)), 
+        url('../img/fondo.jpg') center/cover no-repeat;
+}
+*/
+
+@media (max-width: 768px) {
+    #inicio .container {
+        text-align: center;
+    }
+
+    #inicio h1,
+    #inicio p {
+        text-align: center;
+    }
+}
+
+.collage-container {
+    position: relative;
+    width: 100%;
+    height: 500px;
+}
+
+.collage-img {
+    position: absolute;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    border: 3px solid white;
+}
+
+.collage-img:hover {
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.img-1 {
+    top: 10%;
+    left: 5%;
+    width: 250px;
+    height: 180px;
+    transform: rotate(-5deg);
+}
+
+.img-2 {
+    top: 5%;
+    right: 10%;
+    width: 220px;
+    height: 160px;
+    transform: rotate(3deg);
+}
+
+.img-3 {
+    top: 45%;
+    left: 15%;
+    width: 200px;
+    height: 150px;
+    transform: rotate(-2deg);
+}
+
+.img-4 {
+    bottom: 15%;
+    right: 20%;
+    width: 230px;
+    height: 170px;
+    transform: rotate(4deg);
+}
+
+.img-5 {
+    bottom: 5%;
+    left: 25%;
+    width: 210px;
+    height: 140px;
+    transform: rotate(-3deg);
+}
+
+.img-6 {
+    top: 25%;
+    right: 5%;
+    width: 240px;
+    height: 160px;
+    transform: rotate(2deg);
+}
+
+@media (max-width: 768px) {
+    /* Ajustes del contenedor a un diseño de cuadrícula */
+    .collage-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem; /* Separación horizontal */
+        height: auto;
+        padding: 1rem;
+        box-sizing: border-box;
+    }
+    
+    /* Reglas generales para las imágenes dentro de la cuadrícula */
+    .collage-img {
+        position: relative;
+        width: 40vw; /* El tamaño de la imagen se ajusta al ancho de la pantalla */
+        height: auto;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+        border: 2px solid white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transform: none !important;
+        transition: all 0.3s ease;
+    }
+
+    /* Se agrupan las imágenes para aplicarles un margen negativo */
+    .collage-container .collage-img:nth-child(n+3) {
+        margin-top: -15vw; /* Aumentamos el margen negativo para más superposición */
+    }
+}
+
+.modern-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modern-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.vertical-image {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+}
+
+.timeline-dot {
+    width: 12px;
+    height: 12px;
+    background: #3b82f6;
+    border-radius: 50%;
+    position: absolute;
+    left: -26px;
+    top: 8px;
+}
+
+.timeline-line {
+    position: absolute;
+    left: -20px;
+    top: 20px;
+    bottom: -20px;
+    width: 2px;
+    background: #e5e7eb;
+}
+
+.founder-card {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.leader-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.leader-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.deacon-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-align: center;
+    min-width: 280px;
+    margin: 0 12px;
+}
+
+.deacon-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.service-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    text-align: center;
+    min-width: 280px;
+    margin: 0 15px;
+    border: 1px solid #f1f5f9;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+    border-color: #3b82f6;
+}
+
+.service-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.event-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s ease;
+    text-align: center;
+    min-width: 280px;
+    margin: 0 15px;
+    border: 1px solid #f1f5f9;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+    border-color: #3b82f6;
+}
+
+.event-date {
+    background: #3b82f6;
+    color: white;
+    padding: 0.75rem 1.25rem;
+    border-radius: 16px;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.temple-badge {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+/* Animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#mobile-menu-overlay.is-active {
+    opacity: 0.5;
+    pointer-events: auto;
+}
