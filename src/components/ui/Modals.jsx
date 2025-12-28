@@ -14,7 +14,7 @@ export const PrivacyPolicyModal = ({ isOpen, onClose }) => {
         </div>
         <div className="p-8 overflow-y-auto space-y-6 text-stone-700 dark:text-stone-300 text-sm leading-relaxed">
           <p>
-            En <strong>Congregacion Evangelica La Voz Del Triunfo Pentecostal</strong>, 
+            En <strong>Congregación Evangélica La Voz Del Triunfo Pentecostal</strong>, 
             respetamos su privacidad y su derecho a la propia imagen, especialmente en el contexto de nuestras actividades públicas.
           </p>
           <h4 className="font-bold text-[#3D6599] dark:text-[#C7DBEB] text-lg">
@@ -68,7 +68,7 @@ export const TermsOfUseModal = ({ isOpen, onClose }) => {
         </div>
         <div className="p-8 overflow-y-auto space-y-6 text-stone-700 dark:text-stone-300 text-sm leading-relaxed">
           <p>
-            Bienvenidos a Congregacion Evangelica La Voz Del Triunfo Pentecostal.
+            Bienvenidos a <strong>Congregación Evangélica La Voz Del Triunfo Pentecostal</strong> .
           </p>
           <h4 className="font-bold text-[#3D6599] dark:text-[#C7DBEB] text-lg">
             1. Propósito
