@@ -9,6 +9,9 @@ import pastor from '../img/pastor.jpg';
 import pastora from '../img/pastora.jpg';
 import er from '../img/diacono_e.jpg';
 import rm from '../img/diacono_r.jpg';
+import exe from '../img/diacono_exe.jpg';
+import ju from '../img/diacono_j.jpg';
+import al from '../img/diacono_a.jpg';
 import nf from '../img/nf.jpg';
 
 
@@ -38,7 +41,7 @@ export const deacons = [
   },
   { name: "Juan Vásquez", 
     role: "Diácono", 
-    img: nf
+    img: ju
   },
   { name: "Ramón Bravo", 
     role: "Diácono", 
@@ -50,11 +53,11 @@ export const deacons = [
   },
   { name: "Alberto García", 
     role: "Diácono", 
-    img: nf 
+    img: al
   },
   { name: "Exequiel Madriaga", 
     role: "Diácono", 
-    img: nf 
+    img: exe 
   }
 ];
 
