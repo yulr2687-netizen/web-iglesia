@@ -96,7 +96,7 @@ export const choirInstruments = [
   { 
     category: "Cuerdas Pulsadas", 
     instrument: "Mandolinas | Banjos", 
-    count: 7, 
+    count: 8, 
     desc: "El sonido clásico y alegre de nuestra tradición.", 
     icon: <Music size={20} />,
     quote: "Con alegría y júbilo, nuestras cuerdas anuncian las grandezas del Señor en cada reunión.",
