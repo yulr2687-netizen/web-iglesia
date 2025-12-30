@@ -31,7 +31,13 @@ const VisitUsView = () => {
               
               <div className="lg:w-2/5 p-8 md:p-12 flex flex-col justify-center bg-stone-50/50 dark:bg-[#1e1a17] relative z-10">
                 <div className="w-full h-40 mb-6 rounded-2xl overflow-hidden shadow-sm">
-                   <img src={loc.img} alt={loc.name} className="w-full h-full object-cover transition-transform hover:scale-105 duration-700" />
+                  <img 
+                    src={loc.img} 
+                    alt={loc.name}
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()} 
+                    className="w-full h-full object-cover transition-transform hover:scale-105 duration-700 select-none" 
+                  />
                 </div>
 
                 <div className="mb-6">

@@ -66,7 +66,12 @@ const HomeView = ({ handleNavigation }) => {
         <div className="absolute inset-0 z-0">
            {heroImages.map((img, idx) => (
              <div key={idx} className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === heroImageIndex ? 'opacity-100' : 'opacity-0'}`}>
-                <img src={img} alt="Church Background" className="w-full h-full object-cover" />
+                <img 
+                  src={img} 
+                  alt="La Voz Del Triunfo Pentecostal"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()} 
+                  className="w-full h-full object-cover select-none" />
                 <div className="absolute inset-0 bg-black/70 mix-blend-multiply"></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90"></div>
              </div>
@@ -144,7 +149,12 @@ const HomeView = ({ handleNavigation }) => {
           <RevealOnScroll direction="right" delay={400}>
             <div className="bg-white dark:bg-[#1e1a17] p-4 rounded-2xl shadow-sm border border-stone-100 dark:border-stone-800 text-center hover:shadow-xl transition-all duration-300">
               <div className="rounded-xl overflow-hidden mb-6 h-80 relative group">
-                <img src={fundadores} alt="Fundadores" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <img 
+                  src={fundadores} 
+                  alt="Fundadores"
+                  draggable="false"
+                  onContextMenu={(e) => e.preventDefault()} 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 select-none" />
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
               </div>
               <h3 className="font-serif text-2xl font-bold text-stone-900 dark:text-white">Nuestros Fundadores</h3>
@@ -225,7 +235,9 @@ const HomeView = ({ handleNavigation }) => {
                        <img 
                          src={locationImage} 
                          alt={`Sede ${item.location}`} 
-                         className="w-24 h-24 md:w-32 md:h-32 rounded-xl object-cover shadow-sm"
+                         draggable="false"
+                         onContextMenu={(e) => e.preventDefault()}
+                         className="w-24 h-24 md:w-32 md:h-32 rounded-xl object-cover shadow-sm select-none"
                        />
                     </div>
                   </div>
@@ -264,7 +276,12 @@ const HomeView = ({ handleNavigation }) => {
                     })()}
                   </div>
                   <div className="md:w-1/2 lg:w-full xl:w-1/2 h-64 md:h-auto lg:h-64 xl:h-auto relative overflow-hidden">
-                    <img src={validEvents[activeEventIndex].img} alt={validEvents[activeEventIndex].title} className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${getEventStatus(validEvents[activeEventIndex].date) === 'past' ? 'grayscale' : ''}`} />
+                    <img 
+                      src={validEvents[activeEventIndex].img} 
+                      alt={validEvents[activeEventIndex].title}
+                      draggable="false"
+                      onContextMenu={(e) => e.preventDefault()} 
+                      className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 select-none ${getEventStatus(validEvents[activeEventIndex].date) === 'past' ? 'grayscale' : ''}`} />
                     <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
                   </div>
                   <div className="p-8 flex flex-col justify-center flex-1 relative">

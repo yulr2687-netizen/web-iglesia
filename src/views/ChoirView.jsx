@@ -3,6 +3,7 @@ import { Music, Clock, MapPin, ChevronDown, Users, Quote, CheckCircle2, Mic2 } f
 import RevealOnScroll from '../components/ui/RevealOnScroll';
 import { choirInstruments } from '../data/mockData';
 import pcoro from '../img/pcoro.jpg';
+import ProtectedImage from '../components/ui/ProtectedImage';
 
 const ChoirView = () => {
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -19,7 +20,10 @@ const ChoirView = () => {
       <div className="max-w-4xl mx-auto text-center mb-16 relative">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-12 w-32 h-32 bg-[#3D6599]/10 blur-3xl rounded-full pointer-events-none"></div>
         <RevealOnScroll direction="down">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#C7DBEB]/30 dark:bg-[#3D6599]/20 text-[#3D6599] dark:text-[#C7DBEB] border border-[#C7DBEB] dark:border-[#3D6599]/30 text-sm font-medium mb-6"><Music size={16} /><span>Ministerio de Alabanza</span></div>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#C7DBEB]/30 dark:bg-[#3D6599]/20 text-[#3D6599] dark:text-[#C7DBEB] border border-[#C7DBEB] dark:border-[#3D6599]/30 text-sm font-medium mb-6">
+            <Music size={16} />
+            <span>Ministerio de Alabanza</span>
+          </div>
           <h1 className="font-serif text-5xl md:text-6xl font-bold text-stone-900 dark:text-white mb-6">Nuestro Coro</h1>
           <p className="text-lg text-stone-600 dark:text-stone-300 max-w-2xl mx-auto leading-relaxed">"Cantad alegres a Dios, habitantes de toda la tierra." — Salmo 100:1<br/>Un grupo apasionado de adoradores unidos por el propósito de exaltar el nombre de Cristo a través de la música.</p>
         </RevealOnScroll>
@@ -29,7 +33,10 @@ const ChoirView = () => {
         <RevealOnScroll delay={100}>
           <div className="bg-white dark:bg-[#1e1a17] rounded-3xl overflow-hidden shadow-lg border border-stone-100 dark:border-stone-800 mb-20 flex flex-col md:flex-row">
             <div className="md:w-1/2 h-80 md:h-auto relative">
-              <img src={pcoro} alt="Coro cantando" className="w-full h-full object-cover" />
+              <ProtectedImage 
+                src={pcoro} 
+                alt="La Voz Del Triunfo Pentecostal"
+                className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
                 <div>
                   <span className="text-[#C7DBEB] font-bold uppercase tracking-wider text-xs">Guía Coro</span>
@@ -49,8 +56,11 @@ const ChoirView = () => {
         </RevealOnScroll>
 
         <div className="mb-20">
-           <RevealOnScroll className="text-center mb-10"><h2 className="font-serif text-3xl font-bold text-stone-900 dark:text-white">Nuestros Instrumentos</h2><p className="text-stone-500 dark:text-stone-400 text-sm mt-2">Haz clic en cada sección para conocer a los responsables.</p></RevealOnScroll>
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+          <RevealOnScroll className="text-center mb-10">
+            <h2 className="font-serif text-3xl font-bold text-stone-900 dark:text-white">Nuestros Instrumentos</h2>
+            <p className="text-stone-500 dark:text-stone-400 text-sm mt-2">Haz clic en cada sección para conocer a los responsables.</p>
+          </RevealOnScroll>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
             {choirInstruments.map((item, idx) => {
               const isExpanded = expandedIndex === idx;
               return (
@@ -75,7 +85,11 @@ const ChoirView = () => {
                           <div className={`grid gap-4 ${item.responsibles.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                             {item.responsibles.map((resp, rIdx) => (<div key={rIdx} className="group/photo">
                             <div className="rounded-xl overflow-hidden aspect-square shadow-md border border-stone-100 dark:border-stone-700 relative w-full max-w-[90px] sm:max-w-[110px] md:max-w-[130px] lg:max-w-[150px] mx-auto">
-                              <img src={resp.img} alt={resp.name} className="w-full h-full object-cover transition-transform duration-500 group-hover/photo:scale-110" />
+                              <ProtectedImage 
+                                src={resp.img} 
+                                alt={resp.name}
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover/photo:scale-110" 
+                              />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>
                             </div>
                             <p className="text-xs font-bold text-center mt-2 text-stone-700 dark:text-stone-200">{resp.name}</p></div>))}
@@ -97,7 +111,7 @@ const ChoirView = () => {
                 </RevealOnScroll>
               );
             })}
-           </div>
+          </div>
         </div>
 
         {/*<RevealOnScroll direction="zoom" delay={200}>

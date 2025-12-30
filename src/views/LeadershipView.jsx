@@ -33,8 +33,10 @@ const LeadershipView = () => {
                 <div className="w-48 h-48 md:w-64 md:h-64 flex-shrink-0 rounded-2xl overflow-hidden shadow-lg border-4 border-[#C7DBEB] dark:border-[#3D6599]/30">
                   <img 
                     src={pastor.img} 
-                    alt={pastor.name} 
-                    className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700" 
+                    alt={pastor.name}
+                    draggable="false"
+                    onContextMenu={(e) => e.preventDefault()} 
+                    className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700 select-none" 
                   />
                 </div>
                 <div className="text-center md:text-left flex-1">
@@ -93,8 +95,10 @@ const LeadershipView = () => {
                   <div className="w-24 h-24 md:w-28 md:h-28 flex-shrink-0 rounded-xl overflow-hidden border-2 border-[#C7DBEB] dark:border-[#3D6599] shadow-md relative z-10">
                     <img 
                       src={deacon.img} 
-                      alt={deacon.name} 
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-110" 
+                      alt={deacon.name}
+                      draggable="false"
+                      onContextMenu={(e) => e.preventDefault()} 
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-110 select-none" 
                     />
                   </div>
                   <div className="flex-1 flex flex-col justify-center relative z-10">
