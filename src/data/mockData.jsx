@@ -289,7 +289,7 @@ export const allEvents = [
     month: "Enero", 
     title: "Bautismos 2026",
     location: "Laguna Cristal", 
-    time: "Por confirmar", 
+    time: "10:00 AM", 
     desc: "Bautismo basado en la palabra, símbolo de fe en Cristo, dejando atrás lo viejo y comenzando una vida nueva en Él.", 
     img: bautiso 
   },
