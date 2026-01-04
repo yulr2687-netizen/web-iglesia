@@ -3,7 +3,6 @@ import { Music, Clock, MapPin, ChevronDown, Users, Quote, CheckCircle2, Mic2 } f
 import RevealOnScroll from '../components/ui/RevealOnScroll';
 import { choirInstruments } from '../data/mockData';
 import pcoro from '../img/pcoro.jpg';
-import ProtectedImage from '../components/ui/ProtectedImage';
 
 const ChoirView = () => {
   const [expandedIndex, setExpandedIndex] = useState(null);
@@ -33,10 +32,12 @@ const ChoirView = () => {
         <RevealOnScroll delay={100}>
           <div className="bg-white dark:bg-[#1e1a17] rounded-3xl overflow-hidden shadow-lg border border-stone-100 dark:border-stone-800 mb-20 flex flex-col md:flex-row">
             <div className="md:w-1/2 h-80 md:h-auto relative">
-              <ProtectedImage 
+              <img 
                 src={pcoro} 
                 alt="La Voz Del Triunfo Pentecostal"
-                className="w-full h-full object-cover" />
+                draggable="false"
+                onContextMenu={(e) => e.preventDefault()} 
+                className="w-full h-full object-cover " />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-8">
                 <div>
                   <span className="text-[#C7DBEB] font-bold uppercase tracking-wider text-xs">Guía Coro</span>
@@ -85,9 +86,11 @@ const ChoirView = () => {
                           <div className={`grid gap-4 ${item.responsibles.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                             {item.responsibles.map((resp, rIdx) => (<div key={rIdx} className="group/photo">
                             <div className="rounded-xl overflow-hidden aspect-square shadow-md border border-stone-100 dark:border-stone-700 relative w-full max-w-[90px] sm:max-w-[110px] md:max-w-[130px] lg:max-w-[150px] mx-auto">
-                              <ProtectedImage 
+                              <img 
                                 src={resp.img} 
                                 alt={resp.name}
+                                draggable="false"
+                                onContextMenu={(e) => e.preventDefault()} 
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover/photo:scale-110" 
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover/photo:opacity-100 transition-opacity duration-300"></div>

@@ -12,7 +12,25 @@ import rm from '../img/diacono_r.jpg';
 import exe from '../img/diacono_exe.jpg';
 import ju from '../img/diacono_j.jpg';
 import al from '../img/diacono_a.jpg';
-import nf from '../img/nf.jpg';
+import mo from '../img/diacono_m.jpg';
+import rb from '../img/diacono_rb.jpg';
+import pr from '../img/pcoro.jpg';
+import dr from '../img/coro_d.jpg';
+import gr from '../img/coro_g.jpg';
+import yb from '../img/coro_y.jpg';
+import mm from '../img/coro_m.jpg';
+import bt from '../img/coro_b.jpg';
+import pb from '../img/coro_p.jpg';
+import fb from '../img/coro_f.jpg';
+import nb from '../img/coro_n.jpg';
+import nbr from '../img/coro_nb.jpg';
+import cr from '../img/coro_c.jpg';
+import ar from '../img/coro_a.jpg';
+import oz from '../img/coro_o.jpg';
+import sr from '../img/coro_s.jpg';
+import dt from '../img/coro_dt.jpg';
+//import nf from '../img/nf.jpg';
+
 
 
 //DATOS DE APARTADO PASTORES, DIACONOS y CORO//
@@ -45,11 +63,11 @@ export const deacons = [
   },
   { name: "Ramón Bravo", 
     role: "Diácono", 
-    img: nf 
+    img: rb 
   },
   { name: "Moisés Pardo", 
     role: "Diácono", 
-    img: nf 
+    img: mo 
   },
   { name: "Alberto García", 
     role: "Diácono", 
@@ -71,28 +89,28 @@ export const choirInstruments = [
     quote: "Cada acorde es una oración que sube al cielo. Nuestra guitarra es solo el instrumento, Él es la música.",
     responsibles: [
       { name: "Hna. Damaris", 
-        img: nf 
+        img: dr 
       },
       { name: "Hna. Genesis", 
-        img: nf
+        img: gr
       },
-      { name: "Hna. Alondra", 
-        img: nf 
-      },
+      //{ name: "Hna. Alondra", 
+      //  img: nf 
+      //},
       { name: "Hno. Marcos", 
-        img: nf
+        img: mm
       },
       { name: "Hno. Pedro", 
-        img: nf 
+        img: pb 
       },
       { name: "Hno. Benjamín", 
-        img: nf
+        img: bt
       },
       { name: "Hno. Felipe", 
-        img: nf 
+        img: fb
       },
       { name: "Hno. Yerson", 
-        img: nf
+        img: yb
       }
     ]
   },
@@ -105,28 +123,28 @@ export const choirInstruments = [
     quote: "Con alegría y júbilo, nuestras cuerdas anuncian las grandezas del Señor en cada reunión.",
     responsibles: [
       { name: "Hna. Damaris", 
-        img: nf
+        img: dr
       },
       { name: "Hna. Genesis", 
-        img: nf
+        img: gr
       },
       { name: "Hna. Noelia", 
-        img: nf
+        img: nb
       },
       { name: "Hna. Natalia", 
-        img: nf
+        img: nbr
       },
       { name: "Hna. Carolina", 
-        img: nf
+        img: cr
       },
       { name: "Hna. Any", 
-        img: nf
+        img: ar
       },
       { name: "Hno. Oscar", 
-        img: nf
+        img: oz
       },
       { name: "Hno. Saúl", 
-        img: nf
+        img: sr
       }
     ]
   },
@@ -139,10 +157,10 @@ export const choirInstruments = [
     quote: "Como en los muros de Jericó, tocamos para que las barreras caigan y su Gloria descienda.",
     responsibles: [
       { name: "Hno. Yerson", 
-        img: nf 
+        img: yb 
       },
       { name: "P. Isaías", 
-        img: nf 
+        img: pr 
       }
     ]
   },
@@ -155,10 +173,10 @@ export const choirInstruments = [
     quote: "El respirar del acordeón nos recuerda el Soplo de Vida que Dios nos regala cada mañana.",
     responsibles: [
       { name: "P. Isaías", 
-        img: nf 
+        img: pr
       },
       { name: "Hno. Yerson", 
-        img: nf 
+        img: yb
       }
     ]
   },
@@ -171,13 +189,13 @@ export const choirInstruments = [
     quote: "Nuestras manos aplauden y nuestros panderos resuenan, porque el gozo del Señor es nuestra fortaleza.",
     responsibles: [
       { name: "Hna. Any", 
-        img: nf 
+        img: ar 
       },
       { name: "Hna. Domi", 
-        img: nf 
+        img: dt
       },
       { name: "Hna. Carolina", 
-        img: nf
+        img: cr
       }
     ]
   },
