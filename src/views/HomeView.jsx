@@ -50,10 +50,14 @@ const HomeView = ({ handleNavigation }) => {
   };
 
   const getEventStatus = (dateString) => {
-    const eventDate = new Date(dateString);
+    const [year, month, day] = dateString.split('-').map(Number);
+    const eventDay = new Date(year, month - 1, day);
     const today = new Date();
-    const eventDay = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
-    const currentDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const currentDay = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
 
     if (eventDay < currentDay) return 'past';
     if (eventDay.getTime() === currentDay.getTime()) return 'active';
@@ -62,6 +66,7 @@ const HomeView = ({ handleNavigation }) => {
 
   return (
     <>
+      {/*INICIO - PRINCIPAL */}
       <header id="inicio" className="relative px-4 py-32 md:py-48 flex flex-col items-center text-center overflow-hidden">
         <div className="absolute inset-0 z-0">
            {heroImages.map((img, idx) => (
@@ -71,23 +76,29 @@ const HomeView = ({ handleNavigation }) => {
                   alt="La Voz Del Triunfo Pentecostal"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()} 
-                  className="w-full h-full object-cover select-none" />
+                  className="w-full h-full object-cover select-none" 
+                />
                 <div className="absolute inset-0 bg-black/70 mix-blend-multiply"></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90"></div>
              </div>
            ))}
         </div>
-
         <div className="relative z-10 max-w-4xl mx-auto space-y-8">
           <RevealOnScroll direction="down" delay={100}>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white border border-white/20 text-sm font-medium mx-auto hover:bg-white/20 transition-colors backdrop-blur-sm">
-              <Home size={14} /> <span>¡Bienvenidos, nos alegra recibirles!</span>
+              <Home size={14} /> 
+              <span>¡Bienvenidos, nos alegra recibirles!</span>
             </div>
           </RevealOnScroll>
           <RevealOnScroll direction="zoom" delay={300}>
-            <h1 className="font-serif text-xs md:text-xl font-bold text-white leading-tight drop-shadow-lg">Congregación Evangélica</h1>
-            <h1 className="font-serif text-4xl md:text-5xl font-bold text-white leading-tight drop-shadow-lg"><span className="text-[#C7DBEB] inline-block transition-transform duration-500 cursor-default">La Voz Del Triunfo Pentecostal</span></h1>
-
+            <h1 className="font-serif text-xs md:text-xl font-bold text-white leading-tight drop-shadow-lg">
+              Congregación Evangélica
+            </h1>
+            <h1 className="font-serif text-4xl md:text-5xl font-bold text-white leading-tight drop-shadow-lg">
+              <span className="text-[#C7DBEB] inline-block transition-transform duration-500 cursor-default">
+                La Voz Del Triunfo Pentecostal
+              </span>
+            </h1>
           </RevealOnScroll>
           <br/>
           <RevealOnScroll direction="up" delay={500}>
@@ -110,18 +121,29 @@ const HomeView = ({ handleNavigation }) => {
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-white/50"><ArrowRight className="rotate-90" size={32} /></div>
       </header>
 
+      {/* SECCIÓN NOSOTROS */}
       <section id="sobre-nosotros" className="py-20 px-4 md:px-12 max-w-7xl mx-auto">
         <RevealOnScroll className="text-center mb-16">
-          <span className="bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Conócenos</span>
-          <h2 className="font-serif text-4xl font-bold text-stone-900 dark:text-white mt-4 mb-4">Sobre Nosotros</h2></RevealOnScroll>
+          <span className="bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+            Conócenos
+          </span>
+          <h2 className="font-serif text-4xl font-bold text-stone-900 dark:text-white mt-4 mb-4">
+            Sobre Nosotros
+          </h2>
+        </RevealOnScroll>
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <RevealOnScroll direction="left" delay={200}>
             <div className="space-y-8 bg-white dark:bg-[#1e1a17] p-8 rounded-2xl shadow-sm border border-stone-100 dark:border-stone-800 hover:shadow-md transition-shadow duration-300">
               <div>
-                <h3 className="text-[#3D6599] font-bold text-xl mb-4">Nuestra Historia</h3>
+                <h3 className="text-[#3D6599] font-bold text-xl mb-4">
+                  Nuestra Historia
+                </h3>
                 <div className="pl-4 border-l-2 border-[#C7DBEB] dark:border-[#3D6599]/50 space-y-6">
-                  <div className="relative"><div className="absolute -left-[21px] top-1 w-3 h-3 bg-[#3D6599] rounded-full border-2 border-white dark:border-[#1e1a17]"></div>
-                    <h4 className="font-bold text-stone-900 dark:text-white">1997 - Los Inicios</h4>
+                  <div className="relative">
+                    <div className="absolute -left-[21px] top-1 w-3 h-3 bg-[#3D6599] rounded-full border-2 border-white dark:border-[#1e1a17]"></div>
+                    <h4 className="font-bold text-stone-900 dark:text-white">
+                      1997 - Los Inicios
+                    </h4>
                     <p className="text-stone-600 dark:text-stone-400 text-sm mt-2">
                       La congregación evangélica <strong>La Voz del Triunfo Pentecostal</strong> fue fundada el <strong>27 de mayo de 1997</strong> por <strong>Sergio Rondón</strong> y <strong>Ema Moya</strong>. 
                       Comenzando con la visión de llevar el evangelio a la comunidad, ayudando a las familias y a la 
@@ -130,19 +152,25 @@ const HomeView = ({ handleNavigation }) => {
                   </div>
                   <div className="relative">
                     <div className="absolute -left-[21px] top-1 w-3 h-3 bg-[#3D6599] rounded-full border-2 border-white dark:border-[#1e1a17]"></div>
-                    <h4 className="font-bold text-stone-900 dark:text-white">Presente - Visión Actual</h4>
+                    <h4 className="font-bold text-stone-900 dark:text-white">
+                      Presente - Visión Actual
+                    </h4>
                     <p className="text-stone-600 dark:text-stone-400 text-sm mt-2">
                       Vamos creciendo y hoy nuestra congregación se encuentra ubicada en <strong>La Cascada N.º 778, Machalí</strong>, 
                       expandiendo nuestros programas de ayuda comunitaria y ministerios. Como también continuando con nuestra misión de 
-                      servir a la comunidad con fe.</p>
+                      servir a la comunidad con fe.
+                    </p>
                   </div>
                 </div>
               </div>
               <div className="bg-[#C7DBEB]/20 dark:bg-[#3D6599]/10 p-6 rounded-xl border-l-4 border-[#3D6599] transform hover:translate-x-1 transition-transform">
-                <h3 className="text-[#3D6599] dark:text-[#C7DBEB] font-bold mb-2">Nuestra Misión</h3>
+                <h3 className="text-[#3D6599] dark:text-[#C7DBEB] font-bold mb-2">
+                  Nuestra Misión
+                </h3>
                 <p className="text-[#3D6599] dark:text-[#C7DBEB] text-sm leading-relaxed">
                   Predicar la palabra del evangelio para atraer almas al arrepentimiento y guiar a las personas hacia la paz que solo Dios puede 
-                  colocar en sus corazones. Buscamos ayudar a la familia y la juventud a superar vicios, malos hábitos, dolor y angustia.</p>
+                  colocar en sus corazones. Buscamos ayudar a la familia y la juventud a superar vicios, malos hábitos, dolor y angustia.
+                </p>
               </div>
             </div>
           </RevealOnScroll>
@@ -154,7 +182,8 @@ const HomeView = ({ handleNavigation }) => {
                   alt="Fundadores"
                   draggable="false"
                   onContextMenu={(e) => e.preventDefault()} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 select-none" />
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 select-none" 
+                />
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
               </div>
               <h3 className="font-serif text-2xl font-bold text-stone-900 dark:text-white">Nuestros Fundadores</h3>
@@ -170,39 +199,43 @@ const HomeView = ({ handleNavigation }) => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
           {[{ num: "28", label: "Años sirviendo" }, { num: "80+", label: "Miembros activos" }, { num: "4", label: "Lugares de Reunión" }, { num: "6", label: "Servicios semanales" }].map((stat, idx) => (
             <RevealOnScroll key={idx} direction="up" delay={idx * 100 + 500}>
-              <div className="bg-white dark:bg-[#1e1a17] p-6 rounded-xl text-center shadow-sm border border-stone-100 dark:border-stone-800 hover:border-[#C7DBEB] dark:hover:border-[#3D6599]/50 transition-colors cursor-default"><div className="text-3xl font-bold text-[#3D6599] dark:text-[#C7DBEB] mb-1">{stat.num}</div><div className="text-sm text-stone-500 dark:text-stone-400">{stat.label}</div></div>
+              <div className="bg-white dark:bg-[#1e1a17] p-6 rounded-xl text-center shadow-sm border border-stone-100 dark:border-stone-800 hover:border-[#C7DBEB] dark:hover:border-[#3D6599]/50 transition-colors cursor-default">
+                <div className="text-3xl font-bold text-[#3D6599] dark:text-[#C7DBEB] mb-1">{stat.num}</div>
+                <div className="text-sm text-stone-500 dark:text-stone-400">{stat.label}</div>
+              </div>
             </RevealOnScroll>
           ))}
         </div>
       </section>
 
+      {/* SECCIÓN SERVICIOS*/}
       <section id="servicios" className="py-20 px-4 max-w-7xl mx-auto">
         <RevealOnScroll className="text-center mb-16">
-          <span className="bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Nuestros Servicios</span>
+          <span className="bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+            Nuestros Servicios
+          </span>
           <h2 className="font-serif text-4xl font-bold text-stone-900 dark:text-white mt-4 mb-4">Horarios de Culto</h2>
           <p className="text-stone-500 dark:text-stone-400 max-w-2xl mx-auto">
             Te invitamos a participar en nuestras reuniones semanales en cada una de nuestras sedes.
           </p>
         </RevealOnScroll>
-
         <div className="relative group">
           <button 
             onClick={() => scroll('left')}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 dark:bg-stone-800/80 p-2 rounded-full shadow-lg text-[#3D6599] hover:bg-[#3D6599] hover:text-white transition-all lg:hidden -ml-2 border border-stone-100 dark:border-stone-700"
             aria-label="Anterior"
-          >
+            >
             <ChevronLeft size={24} />
           </button>
-
           <div 
             ref={scrollRef}
             className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 lg:grid lg:grid-cols-2 lg:overflow-visible no-scrollbar"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          > 
+            > 
             {cultos.map((item, idx) => {
-               const locationImage = locations.find(l => l.id === item.locationId)?.img || "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=400";
+              const locationImage = locations.find(l => l.id === item.locationId)?.img || "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=400";
                
-               return (
+              return (
                 <RevealOnScroll key={idx} direction="up" delay={idx * 50} className="min-w-full md:min-w-[45%] lg:min-w-0 snap-center">
                   <div className="bg-white dark:bg-[#1e1a17] rounded-2xl border border-stone-100 dark:border-stone-800 hover:border-[#C7DBEB] dark:hover:border-[#3D6599] transition-all duration-300 shadow-sm hover:shadow-lg h-full flex flex-row items-center p-5 gap-4">
                     <div className="flex-1 flex flex-col justify-between h-full">
@@ -213,7 +246,6 @@ const HomeView = ({ handleNavigation }) => {
                           </div>
                           <h3 className="font-serif text-lg font-bold text-stone-900 dark:text-white leading-tight">{item.location}</h3>
                         </div>
-                        
                         <ul className="space-y-2 mb-4">
                           {item.days.map((day, dIdx) => (
                             <li key={dIdx} className="flex items-start gap-2 text-xs text-stone-600 dark:text-stone-300">
@@ -223,43 +255,45 @@ const HomeView = ({ handleNavigation }) => {
                           ))}
                         </ul>
                       </div>
-
                       <button 
                         onClick={() => handleNavigation('visitanos', true, `loc-${item.locationId}`)}
                         className="w-full mt-auto py-2 rounded-lg bg-stone-50 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-xs font-bold hover:bg-[#3D6599] hover:text-white transition-all flex items-center justify-center gap-2 group"
-                      >
-                        <MapPin size={14} className="group-hover:text-white text-[#3D6599]" /> Ver Dirección
+                        >
+                        <MapPin size={14} className="text-current" /> Ver Dirección
                       </button>
                     </div>
                     <div className="shrink-0">
-                       <img 
-                         src={locationImage} 
-                         alt={`Sede ${item.location}`} 
-                         draggable="false"
-                         onContextMenu={(e) => e.preventDefault()}
-                         className="w-24 h-24 md:w-32 md:h-32 rounded-xl object-cover shadow-sm select-none"
-                       />
+                      <img 
+                        src={locationImage} 
+                        alt={`Sede ${item.location}`} 
+                        draggable="false"
+                        onContextMenu={(e) => e.preventDefault()}
+                        className="w-24 h-24 md:w-32 md:h-32 rounded-xl object-cover shadow-sm select-none"
+                      />
                     </div>
                   </div>
                 </RevealOnScroll>
               );
             })}
           </div>
-
           <button 
             onClick={() => scroll('right')}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 dark:bg-stone-800/80 p-2 rounded-full shadow-lg text-[#3D6599] hover:bg-[#3D6599] hover:text-white transition-all lg:hidden -mr-2 border border-stone-100 dark:border-stone-700"
             aria-label="Siguiente"
-          >
+            >
             <ChevronRight size={24} />
           </button>
         </div>
       </section>
 
+      {/* SECCIÓN EVENTOS */}
       <section id="eventos" className="py-20 px-4 bg-white/50 dark:bg-[#171412]">
         <div className="max-w-7xl mx-auto">
-          <RevealOnScroll className="text-center mb-12">
-            <h2 className="font-serif text-4xl font-bold text-stone-900 dark:text-white mb-2">
+          <RevealOnScroll className="text-center mb-16">
+            <span className="bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+              EVENTOS
+            </span>
+            <h2 className="font-serif text-4xl font-bold text-stone-900 dark:text-white mt-4 mb-4">
               Próximos Eventos
             </h2>
           </RevealOnScroll>
@@ -281,7 +315,8 @@ const HomeView = ({ handleNavigation }) => {
                       alt={validEvents[activeEventIndex].title}
                       draggable="false"
                       onContextMenu={(e) => e.preventDefault()} 
-                      className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 select-none ${getEventStatus(validEvents[activeEventIndex].date) === 'past' ? 'grayscale' : ''}`} />
+                      className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 select-none ${getEventStatus(validEvents[activeEventIndex].date) === 'past' ? 'grayscale' : ''}`} 
+                    />
                     <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
                   </div>
                   <div className="p-8 flex flex-col justify-center flex-1 relative">
@@ -290,16 +325,21 @@ const HomeView = ({ handleNavigation }) => {
                         <span className="block font-bold text-lg leading-none">{validEvents[activeEventIndex].day}</span>
                         <span className="text-xs uppercase">{validEvents[activeEventIndex].month}</span>
                       </div>
-                      <div className="text-stone-400 text-sm flex items-center gap-1"><Clock size={14} /> 
+                      <div className="text-stone-400 text-sm flex items-center gap-1">
+                        <Clock size={14} /> 
                         {validEvents[activeEventIndex].time}
                       </div>
                     </div>
-                    <h3 className="font-serif text-2xl font-bold text-stone-900 dark:text-white mb-2">{validEvents[activeEventIndex].title}</h3>
+                    <h3 className="font-serif text-2xl font-bold text-stone-900 dark:text-white mb-2">
+                      {validEvents[activeEventIndex].title}
+                    </h3>
                     <div className="flex items-center gap-2 mb-2 text-sm text-[#3D6599] font-medium">
                       <MapPin size={14} /> 
                       {validEvents[activeEventIndex].location}
                     </div>
-                    <p className="text-stone-600 dark:text-stone-300 text-sm mb-4">{validEvents[activeEventIndex].desc}</p>
+                    <p className="text-stone-600 dark:text-stone-300 text-sm mb-4">
+                      {validEvents[activeEventIndex].desc}
+                    </p>
                     <div className="flex gap-2 mt-auto">
                       {validEvents.map((_, i) => (<button key={i} onClick={() => setActiveEventIndex(i)} 
                         className={`w-2 h-2 rounded-full transition-all ${i === activeEventIndex ? 'bg-[#3D6599] w-6' : 'bg-stone-300 dark:bg-stone-700'}`} aria-label={`Ver evento ${i + 1}`}/>))
@@ -314,15 +354,32 @@ const HomeView = ({ handleNavigation }) => {
                   return (
                     <RevealOnScroll key={event.id} direction="right" delay={idx * 150}>
                       <div onClick={() => setActiveEventIndex(validEvents.indexOf(event))} className="bg-white dark:bg-[#1e1a17] p-4 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm flex flex-col h-full hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
-                        <div className="relative h-32 rounded-xl overflow-hidden mb-3"><img src={event.img} alt={event.title} className={`w-full h-full object-cover ${status === 'past' ? 'grayscale' : ''}`} />
-                          <div className="absolute top-2 right-2">{status === 'past' && 
-                            <span className="bg-stone-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">Finalizado</span>}{status === 'future' && <span className="bg-orange-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">Pronto</span>}
+                        <div className="relative h-32 rounded-xl overflow-hidden mb-3">
+                          <img 
+                            src={event.img} 
+                            alt={event.title} 
+                            className={`w-full h-full object-cover ${status === 'past' ? 'grayscale' : ''}`} 
+                          />
+                          <div className="absolute top-2 right-2">
+                            {status === 'past' && 
+                              <span className="bg-stone-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+                                Finalizado
+                              </span>
+                            }
+                            {status === 'future' && 
+                              <span className="bg-orange-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+                                Pronto
+                              </span>}
                           </div>
                         </div>
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="text-[#3D6599] dark:text-[#C7DBEB] text-xs font-bold">{event.day} {event.month}</span>
+                          <span className="text-[#3D6599] dark:text-[#C7DBEB] text-xs font-bold">
+                            {event.day} {event.month}
+                          </span>
                         </div>
-                        <h4 className="font-serif font-bold text-stone-900 dark:text-white text-sm mb-1 leading-tight group-hover:text-[#3D6599] transition-colors">{event.title}</h4>
+                        <h4 className="font-serif font-bold text-stone-900 dark:text-white text-sm mb-1 leading-tight group-hover:text-[#3D6599] transition-colors">
+                          {event.title}
+                        </h4>
                       </div>
                     </RevealOnScroll>
                   );
@@ -347,11 +404,17 @@ const HomeView = ({ handleNavigation }) => {
         </div>
       </section>
 
+      {/* SECCION UBICACIÓN */}
       <section id="ubicacion" className="py-20 px-4 bg-stone-50 dark:bg-[#120f0d]">
         <div className="max-w-7xl mx-auto">
-            <RevealOnScroll className="text-center mb-12">
-              <span className="bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">UBICACIÓN</span>
-              <h2 className="font-serif text-4xl font-bold text-stone-900 dark:text-white mt-4 mb-4">Nuestra Ubicación Principal</h2></RevealOnScroll>
+          <RevealOnScroll className="text-center mb-12">
+            <span className="bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+              UBICACIÓN
+            </span>
+            <h2 className="font-serif text-4xl font-bold text-stone-900 dark:text-white mt-4 mb-4">
+              Nuestra Ubicación Principal
+            </h2>
+          </RevealOnScroll>
           <div className="grid lg:grid-cols-3 gap-8">
             <RevealOnScroll direction="left" className="lg:col-span-2">
               <div className="bg-stone-200 dark:bg-stone-800 rounded-2xl overflow-hidden min-h-[400px] h-full relative group shadow-inner">
@@ -361,7 +424,6 @@ const HomeView = ({ handleNavigation }) => {
             <div className="space-y-6">
               <RevealOnScroll direction="right" delay={200}>
                 <div className="bg-white dark:bg-[#1e1a17] p-8 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm hover:shadow-md transition-shadow">
-  
                   <div className="flex items-center gap-3 mb-4 text-[#3D6599] dark:text-[#C7DBEB]">
                     <MapPin size={24} />
                     <h3 className="font-serif text-xl font-bold text-stone-900 dark:text-white">
@@ -386,22 +448,20 @@ const HomeView = ({ handleNavigation }) => {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full bg-white border border-stone-200 text-stone-600 px-4 py-2 rounded-lg text-xs font-semibold shadow-sm hover:border-green-600 hover:text-green-700 hover:shadow transition-all flex items-center justify-center gap-2 group/btn"
-                      >
+                        >
                         <MapPin className="w-5 h-5 text-green-600 group-hover/btn:scale-110 transition-transform" />
                         <span>Google Maps</span>
                       </a>
-
                       <a
                         href="https://waze.com/ul?q=La+Cascada+778+Machalí+Chile"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full bg-white border border-stone-200 text-stone-600 px-4 py-2 rounded-lg text-xs font-semibold shadow-sm hover:border-blue-400 hover:text-blue-500 hover:shadow transition-all flex items-center justify-center gap-2 group/btn"
-                      >
+                        >
                         <Car className="w-5 h-5 text-blue-500 group-hover/btn:scale-110 transition-transform" />
                         <span>Waze</span>
                       </a>
                     </div>
-
                   </div>
                 </div>
               </RevealOnScroll>

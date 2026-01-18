@@ -9,6 +9,7 @@ const DropdownMenu = ({ activeSection, handleNavigation, currentView }) => {
   const subMenuItems = [
     { id: 'sobre-nosotros', label: 'Nuestra Historia', type: 'section' }, 
     { id: 'liderazgo', label: 'Liderazgo', type: 'page' },
+    { id: 'reception', label: 'Recepción', type: 'page' },
     { id: 'coro', label: 'Coro', type: 'page' },
     { id: 'galeria', label: 'Galería', type: 'page' },
     { id: 'visitanos', label: 'Visítanos', type: 'page' },
@@ -23,6 +24,7 @@ const DropdownMenu = ({ activeSection, handleNavigation, currentView }) => {
   const isActive = subMenuItems.some(item => 
     (currentView === 'home' && activeSection === (item.target || item.id)) || 
     (currentView === 'leadership' && item.id === 'liderazgo') ||
+    (currentView === 'reception' && item.id === 'reception') ||
     (currentView === 'choir' && item.id === 'coro') ||
     (currentView === 'gallery' && item.id === 'galeria') ||
     (currentView === 'visitanos' && item.id === 'visitanos')

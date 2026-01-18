@@ -53,7 +53,7 @@ const GalleryView = () => {
             Nuestra Galería
           </h1>
           <p className="text-lg text-stone-600 dark:text-stone-300 max-w-2xl mx-auto leading-relaxed">
-            Momentos especiales que hemos compartido como familia en la fe. Revive nuestras conferencias, aniversarios y retiros.
+            Momentos especiales que hemos compartido como familia en la fe. Revive nuestras conferencias, aniversarios y más.
           </p>
         </RevealOnScroll>
       </div>
@@ -72,7 +72,12 @@ const GalleryView = () => {
                 Ver Álbum Completo
               </div>
               <div className="md:w-1/2 lg:w-full xl:w-1/2 h-64 md:h-auto lg:h-64 xl:h-auto relative overflow-hidden">
-                <img src={galleryAlbums[activeAlbumIndex].cover} alt={galleryAlbums[activeAlbumIndex].title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <img 
+                  src={galleryAlbums[activeAlbumIndex].cover} 
+                  alt={galleryAlbums[activeAlbumIndex].title} 
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 select-none" />
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
               </div>
               <div className="p-8 flex flex-col justify-center flex-1 relative">
@@ -97,8 +102,19 @@ const GalleryView = () => {
             {galleryAlbums.filter((_, i) => i !== activeAlbumIndex).map((album) => (
               <RevealOnScroll key={album.id} direction="right">
                 <div onClick={() => setActiveAlbumIndex(galleryAlbums.indexOf(album))} className="bg-white dark:bg-[#1e1a17] p-4 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm flex flex-col h-full hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
-                  <div className="relative h-32 rounded-xl overflow-hidden mb-3"><img src={album.cover} alt={album.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" /></div>
-                  <div className="flex items-center gap-2 mb-2"><span className="text-[#3D6599] dark:text-[#C7DBEB] text-xs font-bold">{album.year}</span></div><h4 className="font-serif font-bold text-stone-900 dark:text-white text-sm mb-1 leading-tight group-hover:text-[#3D6599] transition-colors">{album.title}</h4>
+                  <div className="relative h-32 rounded-xl overflow-hidden mb-3">
+                    <img 
+                      src={album.cover} 
+                      alt={album.title} 
+                      draggable={false}
+                      onContextMenu={(e) => e.preventDefault()}
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 select-none" 
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-[#3D6599] dark:text-[#C7DBEB] text-xs font-bold">{album.year}</span>
+                  </div>
+                  <h4 className="font-serif font-bold text-stone-900 dark:text-white text-sm mb-1 leading-tight group-hover:text-[#3D6599] transition-colors">{album.title}</h4>
                 </div>
               </RevealOnScroll>
             ))}
