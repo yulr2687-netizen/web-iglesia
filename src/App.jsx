@@ -39,10 +39,11 @@ const App = () => {
   const [showMobileNosotrosMenu, setShowMobileNosotrosMenu] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false); // Estado para botón volver arriba
   const [isScrolled, setIsScrolled] = useState(false); // Estado para navbar shrink
-
   const alreadyLoaded = localStorage.getItem("iglesia_loaded");
   const [loading, setLoading] = useState(!alreadyLoaded);
   const [showLoader, setShowLoader] = useState(!alreadyLoaded);
+  const [showMobileServiciosMenu, setShowMobileServiciosMenu] = useState(false);
+
 
   useEffect(() => {
     const root = document.documentElement;
@@ -129,16 +130,17 @@ const App = () => {
          window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     } else {
-      const targetId = specificScrollId || viewId;
-      if (targetId === 'inicio') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        const element = document.getElementById(targetId);
-        if (element) element.scrollIntoView({ behavior: 'smooth' });
+        const targetId = specificScrollId || viewId;
+        if (targetId === 'inicio') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          const element = document.getElementById(targetId);
+          if (element) element.scrollIntoView({ behavior: 'smooth' });
+        }
       }
-    }
     setActiveSection(viewId);
     setShowMobileNosotrosMenu(false); 
+    setShowMobileServiciosMenu(false);
   };
 
   useEffect(() => {
@@ -157,10 +159,55 @@ const App = () => {
 
   const menuItems = [
     { id: 'nosotros', label: 'Nosotros', isDropdown: true },
-    { id: 'servicios', label: 'Servicios' },
+    { id: 'servicios', label: 'Servicios', isDropdown: true },
     { id: 'eventos', label: 'Eventos' },
     { id: 'ubicacion', label: 'Ubicacion' },
   ];
+
+  // Guardar vista y scroll en cada cambio
+  useEffect(() => {
+    const saveState = () => {
+      localStorage.setItem('lastView', currentView);
+      localStorage.setItem('lastScroll', window.scrollY.toString());
+      localStorage.setItem('lastVisit', Date.now().toString());
+    };
+
+    window.addEventListener('scroll', saveState);
+    window.addEventListener('beforeunload', saveState);
+
+    return () => {
+      window.removeEventListener('scroll', saveState);
+      window.removeEventListener('beforeunload', saveState);
+    };
+  }, [currentView]);
+
+  useEffect(() => {
+    const lastVisit = localStorage.getItem('lastVisit');
+    const lastView = localStorage.getItem('lastView');
+    const lastScroll = localStorage.getItem('lastScroll');
+
+    // ⏱️ Tiempo máximo permitido
+    const MAX_TIME = 2 * 60 * 1000;
+
+    if (lastVisit && Date.now() - Number(lastVisit) < MAX_TIME) {
+      if (lastView && lastView !== 'home') {
+        setTimeout(() => {
+          setCurrentView(lastView);
+        }, 0);
+      }
+
+      if (lastScroll) {
+        setTimeout(() => {
+          window.scrollTo({ top: Number(lastScroll), behavior: 'auto' });
+        }, 100);
+      }
+    } else {
+      // Si pasó mucho tiempo → limpiar y volver a Inicio
+      localStorage.removeItem('lastView');
+      localStorage.removeItem('lastScroll');
+      localStorage.removeItem('lastVisit');
+    }
+  }, []);
 
   return (
     <>
@@ -196,9 +243,34 @@ const App = () => {
                 </a>
                 <div className="flex gap-1 p-1 rounded-full bg-stone-100 dark:bg-stone-800 transition-colors duration-500">
                   {menuItems.map((item) => {
-                    if (item.isDropdown) return <DropdownMenu key={item.id} activeSection={activeSection} handleNavigation={handleNavigation} currentView={currentView} />;
-                    const isActive = currentView === 'home' && activeSection === item.id;
-                    return <a key={item.id} href={`#${item.id}`} onClick={(e) => { e.preventDefault(); handleNavigation(item.id); }} className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 relative ${isActive ? 'bg-[#3D6599] text-white shadow-md shadow-[#3D6599]/30' : 'text-stone-600 dark:text-stone-300 hover:text-[#3D6599] dark:hover:text-[#C7DBEB] hover:bg-stone-200 dark:hover:bg-stone-700/50'}`}>{item.label}</a>;
+                    if (item.isDropdown)
+                    return (
+                      <DropdownMenu
+                        key={item.id}
+                        menuId={item.id}
+                        label={item.label}
+                        activeSection={activeSection}
+                        handleNavigation={handleNavigation}
+                        currentView={currentView}
+                      />
+                    );
+
+                      const isActive = currentView === 'home' && activeSection === item.id;
+
+                      return (
+                        <a
+                          key={item.id}
+                          href={`#${item.id}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleNavigation(item.id);
+                          }}
+                          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${isActive ? 'bg-[#3D6599] text-white' 
+                          : 'text-stone-600 hover:bg-stone-200 dark:text-stone-300 dark:hover:bg-stone-700'}`}
+                          >
+                          {item.label}
+                        </a>
+                      );
                   })}
                 </div>
                 <div className="flex items-center gap-4">
@@ -429,6 +501,51 @@ const App = () => {
                   <div className="w-4 h-4 bg-white/90 dark:bg-stone-900/90 rotate-45 mx-auto -mt-2 border-r border-b border-stone-200 dark:border-stone-700"></div>
                 </div>
               )}
+              {/* MENÚ MÓVIL "SERVICIOS" (POPUP HACIA ARRIBA) */}
+              {showMobileServiciosMenu && (
+                <div
+                  ref={mobileMenuRef}
+                  className="md:hidden fixed bottom-[70px] left-0 right-0 z-50 px-4 animate-in slide-in-from-bottom-5 duration-300"
+                >
+                  <div className="bg-white/90 dark:bg-stone-900/90 backdrop-blur-md rounded-2xl shadow-2xl border border-stone-200 dark:border-stone-700 overflow-hidden">
+                    <div className="p-2 grid grid-cols-2 gap-2">
+                      
+                      {/* Horario Cultos */}
+                      <button
+                        onClick={() => {
+                          handleNavigation('servicios');
+                          setShowMobileServiciosMenu(false);
+                        }}
+                        className="flex flex-col items-center justify-center p-3 rounded-xl hover:bg-[#C7DBEB]/30 dark:hover:bg-stone-800 transition-colors"
+                      >
+                        <Calendar size={20} className="text-[#3D6599] mb-1" />
+                        <span className="text-xs font-medium text-stone-700 dark:text-stone-300">
+                          Horario Cultos
+                        </span>
+                      </button>
+                      
+                      {/* Radio Online */}
+                      <button
+                        onClick={() => {
+                          handleNavigation('radio', true);
+                          setShowMobileServiciosMenu(false);
+                        }}
+                        className="flex flex-col items-center justify-center p-3 rounded-xl hover:bg-[#C7DBEB]/30 dark:hover:bg-stone-800 transition-colors"
+                      >
+                        <Radio size={20} className="text-[#3D6599] mb-1" />
+                        <span className="text-xs font-medium text-stone-700 dark:text-stone-300">
+                          Radio Online
+                        </span>
+                      </button>
+                      
+                    </div>
+                  </div>
+                      
+                  {/* Triángulo indicador */}
+                  <div className="w-4 h-4 bg-white/90 dark:bg-stone-900/90 rotate-45 mx-auto -mt-2 border-r border-b border-stone-200 dark:border-stone-700"></div>
+                </div>
+              )}
+
 
               {/* BOTÓN VOLVER ARRIBA */}
               {showScrollTop && (
@@ -451,24 +568,37 @@ const App = () => {
                   { id: 'ubicacion', icon: MapPin, label: 'Ubicación' },
                 ].map((item) => {
                   const isActive = item.id === 'nosotros' 
-                    ? (showMobileNosotrosMenu || ['liderazgo', 'coro', 'visitanos', 'galeria'].includes(currentView) || (currentView === 'home' && activeSection === 'sobre-nosotros'))
-                    : (currentView === 'home' && activeSection === item.id);
+                    ? (showMobileNosotrosMenu || ['leadership', 'reception', 'choir', 'gallery', 'visitanos'].includes(currentView) || (currentView === 'home' && activeSection === 'sobre-nosotros'))
+                    : (currentView === 'home' && activeSection === item.id) || (item.id === 'servicios' && currentView === 'radio');
               
                   return (
                     <button 
-                      key={item.id} 
-                      ref={item.isTrigger ? mobileMenuTriggerRef : null} // REF AQUÍ PARA EL BOTÓN DISPARADOR
-                      onClick={(e) => { 
-                        e.preventDefault(); 
-                        if (item.isTrigger) {
-                          setShowMobileNosotrosMenu(!showMobileNosotrosMenu);
-                        } else {
-                          handleNavigation(item.id, item.isPage); 
+                      key={item.id}
+                      ref={item.id === 'nosotros' ? mobileMenuTriggerRef : null}
+                      onClick={(e) => {
+                        e.preventDefault();
+                      
+                        // Cerrar ambos menús por defecto
+                        setShowMobileNosotrosMenu(false);
+                        setShowMobileServiciosMenu(false);
+                      
+                        if (item.id === 'nosotros') {
+                          setShowMobileNosotrosMenu(true);
+                          return;
                         }
+                      
+                        if (item.id === 'servicios') {
+                          setShowMobileServiciosMenu(true);
+                          return;
+                        }
+                      
+                        // Navegación normal
+                        handleNavigation(item.id);
                       }}
                       className={`flex flex-col items-center gap-1 w-full transition-all duration-300 
-                      ${isActive ? 'text-[#3D6599] dark:text-[#C7DBEB] -translate-y-1' : 'text-stone-400 dark:text-stone-500'}`}
-                      >
+                        ${isActive ? 'text-[#3D6599] dark:text-[#C7DBEB] -translate-y-1' : 'text-stone-400 dark:text-stone-500'}`}
+                    >
+
                       <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} className={isActive ? 'animate-pulse' : ''} />
                       <span className="text-[10px] font-medium">{item.label}</span>
                     </button>

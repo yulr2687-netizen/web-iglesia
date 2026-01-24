@@ -1,16 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Volume2, VolumeX, Radio, Mic2, Clock, Calendar } from 'lucide-react';
 import RevealOnScroll from '../components/ui/RevealOnScroll';
-import { AZURACAST } from "../data/radioConfig";
+import { RADIO_CONFIG } from "../data/radioConfig";
 import { radioData } from "../data/mockData";
+import Logo from '../img/logo.png';
 
 const RadioView = () => {
   const [volume, setVolume] = useState(1);
   const [showVolume, setShowVolume] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [radioInfo, setRadioInfo] = useState(null);
+  const [nowPlaying, setNowPlaying] = useState({
+    title: "Radio en Vivo",
+    artist: "Transmisión en vivo",
+  });
   const volumeRef = useRef(null);
   const audioRef = useRef(null);
+  const [coverUrl, setCoverUrl] = useState(Logo);
+  const [isLive, setIsLive] = useState(false);
 
   const togglePlay = () => {
     if (isPlaying) {
@@ -42,27 +48,107 @@ const RadioView = () => {
   }, []);
 
   useEffect(() => {
-    const fetchRadio = async () => {
+    const fetchIcecast = async () => {
       try {
-        const res = await fetch(AZURACAST.apiNowPlaying);
+        const res = await fetch(
+          "http://radios.mipanel.stream:6925/status-json.xsl"
+        );
         const data = await res.json();
-        setRadioInfo(data);
-      } catch (err) {
-        console.error("Error cargando AzuraCast:", err);
+
+        const source = Array.isArray(data.icestats.source)
+        ? data.icestats.source[0]
+        : data.icestats.source;
+
+        if (source) {
+          const title = source.title || "";
+
+          const isRealLive =
+            title &&
+            (
+              title.toLowerCase().includes("en vivo") ||
+              title.toLowerCase().includes("live") ||
+              title.toLowerCase().includes("transmisión en vivo")
+            );
+
+          setIsLive(isRealLive);
+
+          if (isRealLive) {
+            setCoverUrl(Logo);
+            setNowPlaying({
+              title: "Radio en Vivo",
+              artist: "Transmisión en vivo",
+            });
+          } else {
+            const [songTitle, artist] = title.split(" - ");
+            setNowPlaying({
+              title: songTitle || "Sin información",
+              artist: artist || "AutoDJ",
+            });
+          }
+        } else {
+          setNowPlaying({
+            title: "Radio en Vivo",
+            artist: "Transmisión en vivo",
+          });
+        }
+      } catch {
+        console.warn("No se pudo cargar metadata IceCast");
       }
     };
 
-    fetchRadio();
-    const interval = setInterval(fetchRadio, 15000);
+    fetchIcecast();
+    const interval = setInterval(fetchIcecast, 15000);
 
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const fetchCover = async () => {
+      if (isLive === true) {
+        setCoverUrl(Logo);
+        return;
+      }
+
+      if (!nowPlaying.title || !nowPlaying.artist) return;
+
+      if (
+        nowPlaying.title.toLowerCase().includes("radio") ||
+        nowPlaying.title.toLowerCase().includes("transmisión")
+      ) {
+        setCoverUrl(Logo);
+        return;
+      }
+
+      try {
+        const query = encodeURIComponent(
+          `${nowPlaying.artist} ${nowPlaying.title} christian`
+        );
+
+        const res = await fetch(
+          `https://itunes.apple.com/search?term=${query}&media=music&limit=1`
+        );
+
+        const data = await res.json();
+      
+        if (data.results && data.results.length > 0) {
+          setCoverUrl(
+            data.results[0].artworkUrl100.replace("100x100", "600x600")
+          );
+        } else {
+          setCoverUrl(Logo);
+        }
+      } catch {
+        setCoverUrl(Logo);
+      }
+    };
+
+    fetchCover();
+  }, [nowPlaying, isLive]);
 
   return (
     <div className="pt-28 pb-20 px-4 min-h-screen">
       {/* Elemento de Audio Invisible */}
-      <audio ref={audioRef} src={radioInfo?.station.listen_url} preload="none" />
+      <audio ref={audioRef} src={RADIO_CONFIG.streamUrl} preload="none" />
       <div className="max-w-6xl mx-auto">
         
         {/* ENCABEZADO Y REPRODUCTOR */}
@@ -70,7 +156,7 @@ const RadioView = () => {
           {/* Lado Izquierdo: Información */}
           <RevealOnScroll direction="right">
             <div className="text-center lg:text-left">
-              {radioInfo?.live.is_live && (
+              {isLive && (
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 text-sm font-bold mb-6 animate-pulse">
                   <div className="w-2 h-2 rounded-full bg-red-600"></div>
                   EN VIVO AHORA
@@ -92,16 +178,16 @@ const RadioView = () => {
           <RevealOnScroll direction="left">
             <div className="bg-white dark:bg-[#1e1a17] rounded-3xl p-8 shadow-2xl border border-stone-100 dark:border-stone-800 relative overflow-hidden group">
               {/* Fondo con carátula difuminada */}
-              {radioInfo?.now_playing?.song?.art && (
+              {coverUrl && (
                 <div
                   className="absolute inset-0 -z-0"
                   style={{
-                    backgroundImage: `url(${radioInfo.now_playing.song.art})`,
+                    backgroundImage: `url(${coverUrl})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     filter: 'blur(30px)',
                     transform: 'scale(1.2)',
-                    opacity: 0.35
+                    opacity: 0.6
                   }}
                 />
               )}
@@ -112,9 +198,9 @@ const RadioView = () => {
               <div className="relative z-10 flex flex-col items-center justify-center py-8">
                 {/* Icono Grande o Carátula */}
                 <div className="w-40 h-40 rounded-full overflow-hidden mb-8 shadow-inner">
-                  {radioInfo?.now_playing?.song?.art ? (
+                  {coverUrl ? (
                     <img
-                      src={radioInfo.now_playing.song.art}
+                      src={coverUrl}
                       alt="Carátula actual"
                       className={`w-full h-full object-cover ${isPlaying ? 'animate-spin-slow' : ''}`}
                     />
@@ -125,11 +211,11 @@ const RadioView = () => {
                   )}
                 </div>
                 {/* Info del Programa Actual */}
-                <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">
-                  {radioInfo?.now_playing.song.title || "Cargando..."}
+                <h3 className="text-1xl font-bold text-white mb-2 drop-shadow-lg">
+                  {nowPlaying.artist}
                 </h3>
                 <div className="flex items-center gap-2 text-white/90 text-sm mb-8 drop-shadow-md">
-                  <Mic2 size={14} className="text-white/90"/> <span>{radioInfo?.now_playing.song.artist || "AutoDJ"}</span>
+                  <Mic2 size={14} className="text-white/90"/> <span>{nowPlaying.title}</span>
                 </div>
                 {/* Controles */}
                 <div className="flex items-center gap-4">
@@ -193,45 +279,40 @@ const RadioView = () => {
         </div>
 
         {/* PROGRAMACIÓN */}
+        {/* INFORMACIÓN DE TRANSMISIÓN 
         <RevealOnScroll direction="up">
           <div className="bg-stone-50 dark:bg-[#1a1614] rounded-3xl p-8 md:p-12 border border-stone-200 dark:border-stone-800">
             <div className="flex items-center gap-3 mb-8">
-              <Calendar className="text-[#3D6599]" size={28} />
+              <Radio className="text-[#3D6599]" size={28} />
               <h2 className="text-3xl font-serif font-bold text-stone-900 dark:text-white">
-                Programación de Hoy
+                Información de Transmisión
               </h2>
             </div>
-            {radioInfo?.playing_next && (
-              <div className="mb-6 p-4 rounded-xl bg-[#3D6599]/10 text-[#3D6599] font-semibold">
-                🎶 A continuación:{" "}
-                {radioInfo.playing_next.song.title} –{" "}
-                {radioInfo.playing_next.song.artist}
+
+            <div className="grid md:grid-cols-3 gap-6">
+
+              {/* CANCIÓN ACTUAL 
+              <div className="bg-white dark:bg-[#1e1a17] p-6 rounded-xl border border-stone-100 dark:border-stone-800">
+                <p className="text-sm text-stone-500 mb-2">Sonando ahora</p>
+                <p className="font-bold text-stone-800 dark:text-stone-200">
+                  {nowPlaying.title}
+                </p>
+                <p className="text-sm text-stone-500">
+                  {nowPlaying.artist}
+                </p>
               </div>
-            )}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {radioInfo?.song_history?.length > 0 ? (
-                radioInfo.song_history.slice(0, 4).map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-white dark:bg-[#1e1a17] p-4 rounded-xl border border-stone-100 dark:border-stone-800 hover:shadow-md transition-shadow"
-                    >
-                    <div className="flex items-center gap-2 text-[#3D6599] font-bold text-sm mb-2">
-                      <Clock size={14} /> Reproducido
-                    </div>
-                    <h4 className="font-bold text-stone-800 dark:text-stone-200 mb-1">
-                      {item.song.title}
-                    </h4>
-                    <p className="text-xs text-stone-500">
-                      {item.song.artist}
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-stone-500">Cargando programación…</p>
-              )}
+
+              {/* MENSAJE 
+              <div className="bg-white dark:bg-[#1e1a17] p-6 rounded-xl border border-stone-100 dark:border-stone-800">
+                <p className="text-sm text-stone-500 mb-2">Mensaje</p>
+                <p className="text-stone-700 dark:text-stone-300">
+                  Gracias por escucharnos. Que esta transmisión sea de bendición para tu vida 🙏
+                </p>
+              </div>
+
             </div>
           </div>
-        </RevealOnScroll>
+        </RevealOnScroll>*/}
       </div>
     </div>
   );

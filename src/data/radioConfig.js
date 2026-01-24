@@ -1,4 +1,3 @@
-export const AZURACAST = {
-  stationId: 1,
-  apiNowPlaying: "https://radio.lavozdeltriunfo.cl/api/nowplaying/1",
+export const RADIO_CONFIG = {
+  streamUrl: "http://radios.mipanel.stream:6925/stream",
 };
