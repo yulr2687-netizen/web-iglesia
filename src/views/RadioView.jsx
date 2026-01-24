@@ -120,7 +120,7 @@ const RadioView = () => {
   return (
     <div className="pt-28 pb-20 px-4 min-h-screen">
       {/* Elemento de Audio Invisible */}
-      <audio ref={audioRef} src={RADIO_CONFIG.streamUrl} preload="none" />
+      <audio ref={audioRef} src={RADIO_CONFIG.streamUrl} preload="none" crossOrigin="anonymous" />
       <div className="max-w-6xl mx-auto">
         
         {/* ENCABEZADO Y REPRODUCTOR */}
