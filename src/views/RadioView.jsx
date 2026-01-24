@@ -51,7 +51,7 @@ const RadioView = () => {
     const fetchIcecast = async () => {
       try {
         const res = await fetch(
-          "http://radios.mipanel.stream:6925/status-json.xsl"
+          "https://radios.mipanel.stream:6924/status-json.xsl"
         );
         const data = await res.json();
 
