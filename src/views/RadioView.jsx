@@ -103,47 +103,19 @@ const RadioView = () => {
   }, []);
 
   useEffect(() => {
-    const fetchCover = async () => {
-      if (isLive === true) {
-        setCoverUrl(Logo);
-        return;
-      }
+    if (isLive) {
+      setCoverUrl(Logo);
+      return;
+    }
 
-      if (!nowPlaying.title || !nowPlaying.artist) return;
+    if (!nowPlaying.title || !nowPlaying.artist) {
+      setCoverUrl(Logo);
+      return;
+    }
 
-      if (
-        nowPlaying.title.toLowerCase().includes("radio") ||
-        nowPlaying.title.toLowerCase().includes("transmisión")
-      ) {
-        setCoverUrl(Logo);
-        return;
-      }
-
-      try {
-        const query = encodeURIComponent(
-          `${nowPlaying.artist} ${nowPlaying.title} christian`
-        );
-
-        const res = await fetch(
-          `https://itunes.apple.com/search?term=${query}&media=music&limit=1`
-        );
-
-        const data = await res.json();
-      
-        if (data.results && data.results.length > 0) {
-          setCoverUrl(
-            data.results[0].artworkUrl100.replace("100x100", "600x600")
-          );
-        } else {
-          setCoverUrl(Logo);
-        }
-      } catch {
-        setCoverUrl(Logo);
-      }
-    };
-
-    fetchCover();
+    setCoverUrl(Logo); // Siempre usar imagen por defecto
   }, [nowPlaying, isLive]);
+
 
   return (
     <div className="pt-28 pb-20 px-4 min-h-screen">
