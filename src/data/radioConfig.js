@@ -1,3 +1,3 @@
 export const RADIO_CONFIG = {
-  streamUrl: "http://radios.mipanel.stream:6925/stream",
+  streamUrl: "https://radios.mipanel.stream:6924/stream/1/",
 };

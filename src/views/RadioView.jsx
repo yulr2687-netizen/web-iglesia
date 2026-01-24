@@ -5,8 +5,6 @@ import { RADIO_CONFIG } from "../data/radioConfig";
 import { radioData } from "../data/mockData";
 import Logo from '../img/logo.png';
 
-const streamUrl = '/.netlify/functions/proxyStream';
-
 const RadioView = () => {
   const [volume, setVolume] = useState(1);
   const [showVolume, setShowVolume] = useState(false);
@@ -53,7 +51,7 @@ const RadioView = () => {
     const fetchIcecast = async () => {
       try {
         const res = await fetch(
-          "https://radios.mipanel.stream:6924/status-json.xsl"
+          "https://radios.mipanel.stream:6924/stats?json=1"
         );
         const data = await res.json();
 
@@ -104,25 +102,16 @@ const RadioView = () => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    if (isLive) {
-      setCoverUrl(Logo);
-      return;
-    }
-
-    if (!nowPlaying.title || !nowPlaying.artist) {
-      setCoverUrl(Logo);
-      return;
-    }
-
-    setCoverUrl(Logo); // Siempre usar imagen por defecto
-  }, [nowPlaying, isLive]);
-
+  const getCoverUrl = () => {
+    if (isLive) return Logo;
+    if (!nowPlaying.title || !nowPlaying.artist) return Logo;
+    return Logo; // Aquí podrías poner otra lógica si tuvieras portadas diferentes
+  };
 
   return (
     <div className="pt-28 pb-20 px-4 min-h-screen">
       {/* Elemento de Audio Invisible */}
-      <audio ref={audioRef} src={streamUrl}preload="none" crossOrigin="anonymous" />
+      <audio ref={audioRef} src={RADIO_CONFIG.streamUrl} preload="none" crossOrigin="anonymous" />
       <div className="max-w-6xl mx-auto">
         
         {/* ENCABEZADO Y REPRODUCTOR */}
@@ -156,7 +145,7 @@ const RadioView = () => {
                 <div
                   className="absolute inset-0 -z-0"
                   style={{
-                    backgroundImage: `url(${coverUrl})`,
+                    backgroundImage: `url(${getCoverUrl()})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     filter: 'blur(30px)',
