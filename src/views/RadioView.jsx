@@ -5,6 +5,8 @@ import { RADIO_CONFIG } from "../data/radioConfig";
 import { radioData } from "../data/mockData";
 import Logo from '../img/logo.png';
 
+const streamUrl = '/.netlify/functions/proxyStream';
+
 const RadioView = () => {
   const [volume, setVolume] = useState(1);
   const [showVolume, setShowVolume] = useState(false);
@@ -120,7 +122,7 @@ const RadioView = () => {
   return (
     <div className="pt-28 pb-20 px-4 min-h-screen">
       {/* Elemento de Audio Invisible */}
-      <audio ref={audioRef} src={RADIO_CONFIG.streamUrl} preload="none" crossOrigin="anonymous" />
+      <audio ref={audioRef} src={streamUrl}preload="none" crossOrigin="anonymous" />
       <div className="max-w-6xl mx-auto">
         
         {/* ENCABEZADO Y REPRODUCTOR */}
