@@ -48,56 +48,46 @@ const RadioView = () => {
   }, []);
 
   useEffect(() => {
-    const fetchIcecast = async () => {
+    const fetchMetadata = async () => {
       try {
-        const res = await fetch(
-          "https://radios.mipanel.stream:6924/stats?json=1"
-        );
-        const data = await res.json();
+        // Usamos un proxy (AllOrigins) para evitar el error de CORS que bloquea tu web
+        const targetUrl = "https://radios.mipanel.stream:6924/stats?json=1";
+        const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`);
+        const wrapper = await res.json();
+      
+        // AllOrigins devuelve la respuesta del servidor de radio dentro de 'contents'
+        const data = JSON.parse(wrapper.contents);
 
-        const source = Array.isArray(data.icestats.source)
-        ? data.icestats.source[0]
-        : data.icestats.source;
+        // En ShoutCast v2, el título viene directamente en 'songtitle'
+        if (data && data.songtitle) {
+          const title = data.songtitle;
 
-        if (source) {
-          const title = source.title || "";
-
-          const isRealLive =
-            title &&
-            (
-              title.toLowerCase().includes("en vivo") ||
-              title.toLowerCase().includes("live") ||
-              title.toLowerCase().includes("transmisión en vivo")
-            );
+          // Detectar si es transmisión en vivo
+          const isRealLive = title.toLowerCase().includes("en vivo") || title.toLowerCase().includes("live");
 
           setIsLive(isRealLive);
 
           if (isRealLive) {
-            setCoverUrl(Logo);
             setNowPlaying({
               title: "Radio en Vivo",
               artist: "Transmisión en vivo",
             });
           } else {
-            const [songTitle, artist] = title.split(" - ");
+            // Separar Artista - Canción
+            const parts = title.split(" - ");
             setNowPlaying({
-              title: songTitle || "Sin información",
-              artist: artist || "AutoDJ",
+              title: parts[1] || title,
+              artist: parts[0] || "AutoDJ",
             });
           }
-        } else {
-          setNowPlaying({
-            title: "Radio en Vivo",
-            artist: "Transmisión en vivo",
-          });
         }
-      } catch {
-        console.warn("No se pudo cargar metadata IceCast");
+      } catch (error) {
+        console.warn("Error al obtener metadata vía Proxy:", error);
       }
     };
 
-    fetchIcecast();
-    const interval = setInterval(fetchIcecast, 15000);
+    fetchMetadata();
+    const interval = setInterval(fetchMetadata, 15000); // Se actualiza cada 15 segundos
 
     return () => clearInterval(interval);
   }, []);
