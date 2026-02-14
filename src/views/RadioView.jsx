@@ -6,17 +6,18 @@ import { radioData } from "../data/mockData";
 import Logo from '../img/logo.png';
 
 const RadioView = () => {
+  const audioRef = useRef(null);
   const [volume, setVolume] = useState(1);
   const [showVolume, setShowVolume] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [nowPlaying, setNowPlaying] = useState({
+   const [nowPlaying] = useState({
     title: "Radio en Vivo",
-    artist: "Transmisión en vivo",
+    artist: "Transmisión 24/7",
   });
   const volumeRef = useRef(null);
-  const audioRef = useRef(null);
-  const [coverUrl, setCoverUrl] = useState(Logo);
-  const [isLive, setIsLive] = useState(false);
+  
+  const coverUrl = Logo;
+  const [isLive] = useState(true);
 
   const togglePlay = () => {
     if (isPlaying) {
@@ -47,56 +48,7 @@ const RadioView = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    const fetchMetadata = async () => {
-      try {
-        // Usamos un proxy (AllOrigins) para evitar el error de CORS que bloquea tu web
-        const targetUrl = "https://radios.mipanel.stream:6924/stats?json=1";
-        const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`);
-        const wrapper = await res.json();
-      
-        // AllOrigins devuelve la respuesta del servidor de radio dentro de 'contents'
-        const data = JSON.parse(wrapper.contents);
-
-        // En ShoutCast v2, el título viene directamente en 'songtitle'
-        if (data && data.songtitle) {
-          const title = data.songtitle;
-
-          // Detectar si es transmisión en vivo
-          const isRealLive = title.toLowerCase().includes("en vivo") || title.toLowerCase().includes("live");
-
-          setIsLive(isRealLive);
-
-          if (isRealLive) {
-            setNowPlaying({
-              title: "Radio en Vivo",
-              artist: "Transmisión en vivo",
-            });
-          } else {
-            // Separar Artista - Canción
-            const parts = title.split(" - ");
-            setNowPlaying({
-              title: parts[1] || title,
-              artist: parts[0] || "AutoDJ",
-            });
-          }
-        }
-      } catch (error) {
-        console.warn("Error al obtener metadata vía Proxy:", error);
-      }
-    };
-
-    fetchMetadata();
-    const interval = setInterval(fetchMetadata, 15000); // Se actualiza cada 15 segundos
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const getCoverUrl = () => {
-    if (isLive) return Logo;
-    if (!nowPlaying.title || !nowPlaying.artist) return Logo;
-    return Logo; // Aquí podrías poner otra lógica si tuvieras portadas diferentes
-  };
+  const getCoverUrl = () => Logo;
 
   return (
     <div className="pt-28 pb-20 px-4 min-h-screen">
@@ -165,10 +117,10 @@ const RadioView = () => {
                 </div>
                 {/* Info del Programa Actual */}
                 <h3 className="text-1xl font-bold text-white mb-2 drop-shadow-lg">
-                  {nowPlaying.artist}
+                  {nowPlaying.title}
                 </h3>
                 <div className="flex items-center gap-2 text-white/90 text-sm mb-8 drop-shadow-md">
-                  <Mic2 size={14} className="text-white/90"/> <span>{nowPlaying.title}</span>
+                  <Mic2 size={14} className="text-white/90"/> <span>{nowPlaying.artist}</span>
                 </div>
                 {/* Controles */}
                 <div className="flex items-center gap-4">

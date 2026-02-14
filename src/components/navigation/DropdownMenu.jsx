@@ -19,7 +19,7 @@ const menus = {
   ],
   servicios: [
     { id: 'servicios', label: 'Horario Cultos', type: 'section' },
-    { id: 'radio', label: 'Radio Online', type: 'page' },
+    //{ id: 'radio', label: 'Radio Online', type: 'page' },
   ],
 };
 
