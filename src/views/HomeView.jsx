@@ -418,7 +418,16 @@ const HomeView = ({ handleNavigation }) => {
           <div className="grid lg:grid-cols-3 gap-8">
             <RevealOnScroll direction="left" className="lg:col-span-2">
               <div className="bg-stone-200 dark:bg-stone-800 rounded-2xl overflow-hidden min-h-[400px] h-full relative group shadow-inner">
-                  <iframe title="Ubicación Iglesia" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1650.5151400306079!2d-70.6440430837332!3d-34.17114348707848!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x966345000ee71d47%3A0x5bd7555c8e3852f4!2sIglesia%20La%20Voz%20Del%20Triunfo%20Pentecostal!5e0!3m2!1ses!2scl!4v1766616070308!5m2!1ses!2scl" width="100%" height="100%" style={{border:0, minHeight: '400px'}} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="w-full h-full grayscale-[0.2] hover:grayscale-0 transition-all duration-500"></iframe>
+                  <iframe 
+                    title="Ubicación Iglesia" 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3301.0184785326624!2d-70.64416112261145!3d-34.171445223246494!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x966345000ee71d47%3A0x5bd7555c8e3852f4!2sIglesia%20La%20Voz%20Del%20Triunfo%20Pentecostal!5e0!3m2!1ses!2scl!4v1771626631785!5m2!1ses!2scl" 
+                    width="100%" 
+                    height="100%" 
+                    style={{border:0, minHeight: '400px'}} 
+                    allowFullScreen="" loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade" 
+                    className="w-full h-full grayscale-[0.2] hover:grayscale-0 transition-all duration-500">
+                  </iframe>
               </div>
             </RevealOnScroll>
             <div className="space-y-6">
@@ -444,7 +453,7 @@ const HomeView = ({ handleNavigation }) => {
                     {/* BOTONES */}
                     <div className="flex flex-col gap-3 lg:items-end shrink-0 w-full lg:w-40">
                       <a
-                        href="https://www.google.com/maps/search/?api=1&query=La+Cascada+778+Machalí+Chile"
+                        href="https://www.google.com/maps/search/?api=1&query=La+Voz+Del+Triunfo+Pentecostal"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full bg-white border border-stone-200 text-stone-600 px-4 py-2 rounded-lg text-xs font-semibold shadow-sm hover:border-green-600 hover:text-green-700 hover:shadow transition-all flex items-center justify-center gap-2 group/btn"
@@ -453,7 +462,7 @@ const HomeView = ({ handleNavigation }) => {
                         <span>Google Maps</span>
                       </a>
                       <a
-                        href="https://waze.com/ul?q=La+Cascada+778+Machalí+Chile"
+                        href="https://waze.com/ul?q=La+Voz+Del+Triunfo+Pentecostal"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full bg-white border border-stone-200 text-stone-600 px-4 py-2 rounded-lg text-xs font-semibold shadow-sm hover:border-blue-400 hover:text-blue-500 hover:shadow transition-all flex items-center justify-center gap-2 group/btn"

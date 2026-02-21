@@ -34,46 +34,11 @@ import po from '../img/p_orlando.jpg';
 //import nf from '../img/nf.jpg';
 
 //FOTOS DE ALBUM
-import f1 from "../bau/1.jpg";
-import f2 from "../bau/2.jpg";
-import f3 from "../bau/3.jpg";
-import f4 from "../bau/4.jpg";
-import f5 from "../bau/5.jpg";
-import f6 from "../bau/6.jpg";
-import f7 from "../bau/7.jpg";
-import f8 from "../bau/8.jpg";
-import f9 from "../bau/9.jpg";
-import f10 from "../bau/10.jpg";
-import f11 from "../bau/11.jpg";
-import f12 from "../bau/12.jpg";
-import f13 from "../bau/13.jpg";
-import f14 from "../bau/14.jpg";
-import f15 from "../bau/15.jpg";
-import f16 from "../bau/16.jpg";
-import f17 from "../bau/17.jpg";
-import f18 from "../bau/18.jpg";
-import f19 from "../bau/19.jpg";
-import f20 from "../bau/20.jpg";
-import f21 from "../bau/21.jpg";
-import f22 from "../bau/22.jpg";
-import f23 from "../bau/23.jpg";
-import f24 from "../bau/24.jpg";
-import f25 from "../bau/25.jpg";
-import f26 from "../bau/26.jpg";
-import f27 from "../bau/27.jpg";
-import f28 from "../bau/28.jpg";
-import f29 from "../bau/29.jpg";
-import f30 from "../bau/30.jpg";
-import f31 from "../bau/31.jpg";
-import f32 from "../bau/32.jpg";
-import f33 from "../bau/33.jpg";
-import f34 from "../bau/34.jpg";
-import f35 from "../bau/35.jpg";
-import f36 from "../bau/36.jpg";
-import f37 from "../bau/37.jpg";
-import f38 from "../bau/38.jpg";
-import f39 from "../bau/39.jpg";
-import f40 from "../bau/40.jpg";
+const BASE_GH = "https://yulr2687-netizen.github.io/iglesia-galeria";
+
+function padNumber(num) {
+  return num.toString().padStart(2, "0");
+}
 
 //DATOS DE APARTADO PASTORES, DIACONOS y CORO//
 export const pastors = [
@@ -343,9 +308,23 @@ export const galleryAlbums = [
     title: "Bautismos 2026", 
     year: "2026", 
     desc: "Celebrando el renacer espiritual de nuestros hermanos. Momentos de fe y nuevos comienzos.", 
-    cover: f3, 
-    photos: [f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17, f18, f19, f20, f21, f22, f23, f24, 
-             f25, f26, f27, f28, f29, f30, f31, f32, f33, f34, f35, f36, f37, f38, f39, f40] } 
+    cover: `${BASE_GH}/2026/Bautismos/${padNumber(3)}.jpg`, 
+    photos: Array.from({ length: 40 }, (_, i) => `${BASE_GH}/2026/Bautismos/${padNumber(i + 1)}.jpg`)
+  },
+  { id: 2, 
+    title: "Santa Cena 2009", 
+    year: "2009", 
+    desc: "Recordando el sacrificio del Señor Jesús. Unidos en fe y comunión sagrada hoy.", 
+    cover: `${BASE_GH}/2009/Santa%20Cena/${padNumber(25)}.jpg`, 
+    photos: Array.from({ length: 55 }, (_, i) => `${BASE_GH}/2009/Santa%20Cena/${padNumber(i + 1)}.jpg`)
+  },
+  { id: 3, 
+    title: "Conferencias 2009", 
+    year: "2009", 
+    desc: "Fortaleciendo la fe de nuestros hermanos y ungidos, siguiendo la Palabra de Dios (Josué 1:9).", 
+    cover: `${BASE_GH}/2009/Conferencias/${padNumber(57)}.jpg`, 
+    photos: Array.from({ length: 79 }, (_, i) => `${BASE_GH}/2009/Conferencias/${padNumber(i + 1)}.jpg`)
+  } 
 ];
 
 // --- DATOS RECEPCIÓN ---

@@ -68,20 +68,28 @@
   }
 }
 
-/* === SLIDER VOLUMEN – THUMB PERFECTO === */
+/* SLIDER VOLUMEN – THUMB CON TEMA */
 input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   width: 12px;
   height: 12px;
-  background: #ffffff;
   border-radius: 9999px;
   cursor: pointer;
+  background-color: #3D6599; /* tema claro */
+}
+
+.dark input[type="range"]::-webkit-slider-thumb {
+  background-color: #C7DBEB; /* tema oscuro */
 }
 
 input[type="range"]::-moz-range-thumb {
   width: 12px;
   height: 12px;
-  background: #ffffff;
   border-radius: 9999px;
   cursor: pointer;
+  background-color: #3D6599; /* tema claro */
+}
+
+.dark input[type="range"]::-moz-range-thumb {
+  background-color: #C7DBEB; /* tema oscuro */
 }

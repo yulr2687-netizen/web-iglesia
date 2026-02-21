@@ -13,7 +13,7 @@ import InitialLoader from './components/ui/InitialLoader';
 import DropdownMenu from './components/navigation/DropdownMenu';
 import useScrollEffect from './hooks/useScrollEffect';
 import useClickOutside from './hooks/useClickOutside';
-import NewYearModal from './components/ui/NewYearModal';
+//import NewYearModal from './components/ui/NewYearModal';
 
 // --- VIEWS ---
 import HomeView from './views/HomeView';
@@ -22,7 +22,7 @@ import ChoirView from './views/ChoirView';
 import VisitUsView from './views/VisitUsView';
 import GalleryView from './views/GalleryView';
 import ReceptionView from './views/ReceptionView';
-//import RadioView from './views/RadioView';
+import RadioView from './views/RadioView';
 //import MoviesView from './views/MoviesView';
 
 // --- APP ---
@@ -113,7 +113,7 @@ const App = () => {
       'coro': 'choir',
       'visitanos': 'visitanos',
       'galeria': 'gallery',
-      //'radio': 'radio',
+      'radio': 'radio',
       //'peliculas': 'movies',
       'inicio': 'home'
     };
@@ -304,7 +304,7 @@ const App = () => {
                 {currentView === 'choir' && <ChoirView />}
                 {currentView === 'visitanos' && <VisitUsView />}
                 {currentView === 'gallery' && <GalleryView />}
-                {/*{currentView === 'radio' && <HomeView />}*/}
+                {currentView === 'radio' && <RadioView />}
                 {currentView === 'movies' && <MoviesView />}
               </main>
               
@@ -379,7 +379,7 @@ const App = () => {
                           onClick={() => handleNavigation('radio', true)} 
                           className="text-stone-600 dark:text-stone-400 hover:text-[#3D6599] dark:hover:text-[#C7DBEB] transition-colors flex items-center gap-2"
                           >
-                          {/*<Radio size={16} /> Radio Online*/}
+                          <Radio size={16} /> Radio Online
                         </button>
                       </li>
                       {/*<li>
@@ -608,7 +608,7 @@ const App = () => {
             </div>
             <PrivacyPolicyModal isOpen={isPrivacyModalOpen} onClose={() => setIsPrivacyModalOpen(false)} />
             <TermsOfUseModal isOpen={isTermsModalOpen} onClose={() => setIsTermsModalOpen(false)} />
-            <NewYearModal />
+            {/* <NewYearModal /> */}
           </div>
           <PrivacyPolicyModal
             isOpen={isPrivacyModalOpen}
