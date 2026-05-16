@@ -2,7 +2,7 @@ import React from 'react';
 import { Music, Home, MapPin, Users, Sun } from 'lucide-react';
 import morera from '../img/morera.jpg';
 import central from '../img/fondo.jpg';
-import iglesia from '../img/logo.png';
+//import iglesia from '../img/logo.png';
 import steresa from '../img/steresa.png';
 import bautiso from '../img/bautismos.jpg';
 import pastor from '../img/pastor.jpg';
@@ -238,17 +238,6 @@ export const locations = [
   },
   {
     id: 3,
-    name: "Santa Cristina",
-    address: "Santa Crsitina, Tuniche", 
-    phone: "+56 9 1122 3344",
-    img: iglesia,
-    mapSrc: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d6605.078127990384!2d-70.76219366035608!3d-34.132548277920044!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2scl!4v1766617796500!5m2!1ses!2scl",
-    schedule: [
-      { day: "Viernes", time: "19:30 PM - Servicio Semanal" }
-    ]
-  },
-  {
-    id: 4,
     name: "Santa Teresa",
     address: "Las Brisas con Esperanza, Machalí", 
     phone: "+56 9 5566 7788",
@@ -269,25 +258,21 @@ export const cultos = [
     days: ["Miércoles 19:30 hrs", "Sábado 19:30 hrs"], 
     locationId: 2, icon: <MapPin className="w-5 h-5" /> 
   },
-  { location: "Santa Cristina", 
-    days: ["Viernes 19:30 hrs"], 
-    locationId: 3, icon: <Users className="w-5 h-5" /> 
-  },
   { location: "Santa Teresa", 
     days: ["Domingo 18:00 hrs"], 
-    locationId: 4, icon: <Sun className="w-5 h-5" /> 
+    locationId: 3, icon: <Sun className="w-5 h-5" /> 
   },
 ];
 
 export const allEvents = [
   { id: 1, 
-    date: "2025-12-04", 
-    day: "04-07", 
-    month: "Diciembre", 
-    title: "Aniversario Pastoral",
+    date: "2026-05-27", 
+    day: "27-31", 
+    month: "Mayo", 
+    title: "Aniversario Iglesia",
     location: "Templo central",
     time: "11:00 AM", 
-    desc: "Agradecemos a Dios por la vida y entrega de nuestros pastores. Celebremos juntos su Aniversario Pastoral.", 
+    desc: "Mirando al pasado con gratitud y al futuro con fe. Ven a conmemorar la obra de Dios en nuestra congregación.", 
     img: "https://images.unsplash.com/photo-1478147427282-58a87a120781?auto=format&fit=crop&q=80&w=1000" 
   },
   { id: 2, 

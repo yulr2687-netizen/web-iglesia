@@ -142,10 +142,10 @@ const HomeView = ({ handleNavigation }) => {
                   <div className="relative">
                     <div className="absolute -left-[21px] top-1 w-3 h-3 bg-[#3D6599] rounded-full border-2 border-white dark:border-[#1e1a17]"></div>
                     <h4 className="font-bold text-stone-900 dark:text-white">
-                      1997 - Los Inicios
+                      1998 - Los Inicios
                     </h4>
                     <p className="text-stone-600 dark:text-stone-400 text-sm mt-2">
-                      La congregación evangélica <strong>La Voz del Triunfo Pentecostal</strong> fue fundada el <strong>27 de mayo de 1997</strong> por <strong>Sergio Rondón</strong> y <strong>Ema Moya</strong>. 
+                      La congregación evangélica <strong>La Voz del Triunfo Pentecostal</strong> fue fundada el <strong>27 de mayo de 1998</strong> por <strong>Sergio Rondón</strong> y <strong>Ema Moya</strong>. 
                       Comenzando con la visión de llevar el evangelio a la comunidad, ayudando a las familias y a la 
                       juventud a alejarse de los vicios, malos hábitos, el dolor y la angustia.
                     </p>
@@ -197,7 +197,7 @@ const HomeView = ({ handleNavigation }) => {
           </RevealOnScroll>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
-          {[{ num: "28", label: "Años sirviendo" }, { num: "80+", label: "Miembros activos" }, { num: "4", label: "Lugares de Reunión" }, { num: "6", label: "Servicios semanales" }].map((stat, idx) => (
+          {[{ num: "28", label: "Años sirviendo" }, { num: "80+", label: "Miembros activos" }, { num: "3", label: "Lugares de Reunión" }, { num: "5", label: "Servicios semanales" }].map((stat, idx) => (
             <RevealOnScroll key={idx} direction="up" delay={idx * 100 + 500}>
               <div className="bg-white dark:bg-[#1e1a17] p-6 rounded-xl text-center shadow-sm border border-stone-100 dark:border-stone-800 hover:border-[#C7DBEB] dark:hover:border-[#3D6599]/50 transition-colors cursor-default">
                 <div className="text-3xl font-bold text-[#3D6599] dark:text-[#C7DBEB] mb-1">{stat.num}</div>

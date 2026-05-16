@@ -106,42 +106,71 @@ const App = () => {
   // Cerrar menú móvil si clic fuera
   useClickOutside(mobileMenuRef, () => setShowMobileNosotrosMenu(false), mobileMenuTriggerRef);
 
-  const handleNavigation = (viewId, isPage = false, specificScrollId = null) => {
-    const pageMap = {
-      'liderazgo': 'leadership',
-      'recepcion': 'reception',
-      'coro': 'choir',
-      'visitanos': 'visitanos',
-      'galeria': 'gallery',
-      'radio': 'radio',
-      //'peliculas': 'movies',
-      'inicio': 'home'
-    };
+  const urlMap = {
+    'liderazgo': 'leadership',
+    'recepcion': 'reception',
+    'coro': 'choir',
+    'visitanos': 'visitanos',
+    'galeria': 'gallery',
+    'radio': 'radio',
+    //'peliculas': 'movies',
+    'inicio': 'home'
+  }
 
-    const targetView = pageMap[viewId] || (isPage ? viewId : 'home');
+  const reverseUrlMap = Object.fromEntries(
+    Object.entries(urlMap).map(([key, value]) => [value, key])
+  );
+
+  const handleNavigation = (viewId, isPage = false) => {
+    const targetView = urlMap[viewId] || (isPage ? viewId : 'home');
+
+    const spanishName = reverseUrlMap[targetView] || viewId;
+
+    if (targetView === 'home') {
+      window.history.pushState({ view: 'home'}, '', window.location.pathname);
+    } else {
+      window.history.pushState({ view: 'targetView'}, '', `#${spanishName}` );
+    }
 
     if (currentView !== targetView) {
       setCurrentView(targetView);
-      if (specificScrollId) {
-        setScrollTarget(specificScrollId);
-      } else if (!isPage && viewId !== 'inicio') {
-         setScrollTarget(viewId);
-      } else {
-         window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    } else {
-        const targetId = specificScrollId || viewId;
-        if (targetId === 'inicio') {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-          const element = document.getElementById(targetId);
-          if (element) element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
+    }
+
     setActiveSection(viewId);
     setShowMobileNosotrosMenu(false); 
     setShowMobileServiciosMenu(false);
+
+    if (targetView === 'home') {
+      if (viewId === 'inicio') {
+        window.scrollTo({ top:0, behavior: 'smooth' });
+      } else {
+        setScrollTarget(viewId);
+      }
+    } else {
+      window.scrollTo(0, 0);
+    }
   };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const hash = window.location.hash.replace('#', '');
+
+      if (!hash) {
+        setCurrentView('home');
+        return;
+      }
+
+      const internalView = urlMap[hash];
+      if (internalView) {
+        setCurrentView(internalView);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    handlePopState();
+
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     if (scrollTarget) {
@@ -223,7 +252,7 @@ const App = () => {
             <div className={`text-stone-800 dark:text-stone-100 font-sans transition-colors duration-500`}>
           
               {/* --- NAVBAR ESCRITORIO FIXED + SHRINK --- */}
-              <nav className={`hidden md:flex justify-between items-center px-8 fixed top-0 left-0 w-full z-50 bg-white/90 dark:bg-[#120f0d]/90 backdrop-blur-md border-b dark:border-stone-800 transition-all duration-300 ${isScrolled ? 'py-2 shadow-md bg-white/95' : 'py-4'}`}>
+              <nav className={`hidden md:flex justify-between items-center px-8 fixed top-0 left-0 w-full z-50 bg-white/70 dark:bg-[#1e1a17]/70 backdrop-blur-xl border-b border-white/20 dark:border-stone-800/50 shadow-sm transition-all duration-300 ${isScrolled ? 'py-2' : 'py-4'}`}>
                 <a 
                   href="#inicio" 
                   className="flex items-center gap-3 group cursor-pointer" 
@@ -282,7 +311,7 @@ const App = () => {
               </nav>
               
               {/* NAVBAR MÓVIL SUPERIOR (LOGO + DARK MODE) */}
-              <nav className="md:hidden flex justify-between items-center px-4 py-3 sticky top-0 z-50 bg-white/90 dark:bg-[#120f0d]/90 backdrop-blur-md border-b dark:border-stone-800">
+              <nav className="md:hidden flex justify-between items-center px-4 py-3 sticky top-0 z-50 bg-white/70 dark:bg-[#1e1a17]/70 backdrop-blur-xl border-b border-white/20 dark:border-stone-800/50 shadow-sm">
                 <a 
                   href="#inicio" 
                   className="flex items-center gap-2 group cursor-pointer" 
@@ -442,13 +471,13 @@ const App = () => {
                         </div>
                       </li>
                         
-                      <li>
+                      {/*<li>
                         <p className="font-semibold text-stone-800 dark:text-stone-200 mb-1">Santa Cristina</p>
                         <div className="flex justify-center md:justify-start text-center md:text-left">
                           <span className="w-20">Viernes</span>
                           <span>· 19:30 PM</span>
                         </div>
-                      </li>
+                      </li>*/}
                         
                       <li>
                         <p className="font-semibold text-stone-800 dark:text-stone-200 mb-1">Santa Teresa</p>
@@ -460,7 +489,7 @@ const App = () => {
                     </ul>
                   </div>
                 </div>
-                <div className="max-w-7xl mx-auto pt-8 border-t border-stone-200 dark:border-stone-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-stone-500 dark:text-stone-500">
+                <div className="max-w-7xl mx-auto pt-8 border-t border-stone-200 dark:border-stone-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-stone-500 dark:text-stone-500 text-center md:text-left">
                   <p>© 2026 C.E. La Voz Del Triunfo Pentecostal. Todos los derechos reservados.</p>
                   <div className="flex gap-6">
                     <button onClick={() => setIsTermsModalOpen(true)} className="hover:text-[#3D6599] transition-colors">

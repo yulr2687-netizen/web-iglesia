@@ -2,6 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+/* DESPLAZAMIENTO SUAVE GENERAL */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ESTILO DE LA BARRA DE DESPLAZAMIENTO (Scrollbar) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C7DBEB;
+  border-radius: 3px;
+}
+
+/* COLOR PARA EL MODO OSCURO */
+html.dark ::-webkit-scrollbar-thumb {
+  background: #3D6599;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2d4b73;
+}
+
 /* CONTENEDOR CIRCULAR */
 .logo-wrapper {
   position: relative;

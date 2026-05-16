@@ -51,10 +51,11 @@ const RadioView = () => {
     <div className="pt-28 pb-20 px-4 min-h-screen">
       {/* Elemento de Audio Invisible */}
       <audio ref={audioRef} src={RADIO_CONFIG.streamUrl} preload="none" crossOrigin="anonymous" />
-      <div className="max-w-6xl mx-auto">        
+      <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
           {/* Lado Izquierdo: Información */}
           <RevealOnScroll direction="right">
+            
             <div className="text-center lg:text-left">
               {isLive && (
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 text-sm font-bold mb-6 animate-pulse">

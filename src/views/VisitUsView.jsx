@@ -16,7 +16,7 @@ const VisitUsView = () => {
             Nuestros Templos
           </h1>
           <p className="text-lg text-stone-600 dark:text-stone-300 max-w-2xl mx-auto leading-relaxed">
-            Dios nos ha permitido expandir nuestra visión. Actualmente contamos con 4 lugares de reunión donde puedes congregarte y alabar a Dios junto a nosotros.
+            Dios nos ha permitido expandir nuestra visión. Actualmente contamos con 3 lugares de reunión donde puedes congregarte y alabar a Dios junto a nosotros.
           </p>
         </RevealOnScroll>
       </div>

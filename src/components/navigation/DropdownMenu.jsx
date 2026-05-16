@@ -63,14 +63,14 @@ const menus = {
           <div className="py-1">
             {subMenuItems.map((item) => (
               <a 
-  key={item.id} 
-  href={`#${item.id}`} 
-  onClick={(e) => { 
-    e.preventDefault(); 
-    // Ahora item.id ya es 'leadership', 'choir', etc.
-    handleNavigation(item.id, item.type === 'page'); 
-    setIsOpen(false); 
-  }}
+                key={item.id} 
+                href={`#${item.id}`} 
+                onClick={(e) => { 
+                  e.preventDefault(); 
+                  // Ahora item.id ya es 'leadership', 'choir', etc.
+                  handleNavigation(item.id, item.type === 'page'); 
+                  setIsOpen(false); 
+                }}
                 className={`block px-4 py-2 text-sm text-stone-700 dark:text-stone-300 hover:bg-[#C7DBEB]/30 dark:hover:bg-stone-700 hover:text-[#3D6599] dark:hover:text-[#C7DBEB] transition-colors ${((currentView === 'home' && activeSection === (item.target || item.id)) || (currentView === 'leadership' && item.id === 'liderazgo') || (currentView === 'choir' && item.id === 'coro') || (currentView === 'gallery' && item.id === 'galeria') || (currentView === 'visitanos' && item.id === 'visitanos')) ? 'bg-[#C7DBEB]/50 dark:bg-stone-700 font-semibold text-[#3D6599]' : ''}`}
               >
                 {item.label}
