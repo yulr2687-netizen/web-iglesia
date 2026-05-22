@@ -13,7 +13,7 @@ import InitialLoader from './components/ui/InitialLoader';
 import DropdownMenu from './components/navigation/DropdownMenu';
 import useScrollEffect from './hooks/useScrollEffect';
 import useClickOutside from './hooks/useClickOutside';
-//import NewYearModal from './components/ui/NewYearModal';
+import NewYearModal from './components/ui/NewYearModal';
 
 // --- VIEWS ---
 import HomeView from './views/HomeView';
@@ -637,7 +637,7 @@ const App = () => {
             </div>
             <PrivacyPolicyModal isOpen={isPrivacyModalOpen} onClose={() => setIsPrivacyModalOpen(false)} />
             <TermsOfUseModal isOpen={isTermsModalOpen} onClose={() => setIsTermsModalOpen(false)} />
-            {/* <NewYearModal /> */}
+            <NewYearModal />
           </div>
           <PrivacyPolicyModal
             isOpen={isPrivacyModalOpen}
