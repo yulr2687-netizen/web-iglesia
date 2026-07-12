@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import Logo from '../../img/flogo.png';
+import Logo from '../../assets/img/flogo.png';
 
 const NewYearModal = () => {
   const [isOpen, setIsOpen] = useState(true);

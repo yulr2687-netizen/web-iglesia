@@ -1,36 +1,34 @@
 import React from 'react';
 import { Music, Home, MapPin, Users, Sun } from 'lucide-react';
-import morera from '../img/morera.jpg';
-import central from '../img/fondo.jpg';
-//import iglesia from '../img/logo.png';
-import steresa from '../img/steresa.png';
-import bautiso from '../img/bautismos.jpg';
-import pastor from '../img/pastor.jpg';
-import pastora from '../img/pastora.jpg';
-import er from '../img/diacono_e.jpg';
-import rm from '../img/diacono_r.jpg';
-import exe from '../img/diacono_exe.jpg';
-import ju from '../img/diacono_j.jpg';
-import al from '../img/diacono_a.jpg';
-import mo from '../img/diacono_m.jpg';
-import rb from '../img/diacono_rb.jpg';
-import pr from '../img/pcoro.jpg';
-import dr from '../img/coro_d.jpg';
-import gr from '../img/coro_g.jpg';
-import yb from '../img/coro_y.jpg';
-import mm from '../img/coro_m.jpg';
-import bt from '../img/coro_b.jpg';
-import pb from '../img/coro_p.jpg';
-import fb from '../img/coro_f.jpg';
-import nb from '../img/coro_n.jpg';
-import nbr from '../img/coro_nb.jpg';
-import cr from '../img/coro_c.jpg';
-import ar from '../img/coro_a.jpg';
-import oz from '../img/coro_o.jpg';
-import sr from '../img/coro_s.jpg';
-import dt from '../img/coro_dt.jpg';
-import am from '../img/coro_al.jpg';
-import po from '../img/p_orlando.jpg';
+import morera from '../assets/img/morera.jpg';
+import central from '../assets/img/fondo.jpg';
+import bautiso from '../assets/img/bautismos.jpg';
+import pastor from '../assets/img/pastor.jpg';
+import pastora from '../assets/img/pastora.jpg';
+import er from '../assets/img/diacono_e.jpg';
+import rm from '../assets/img/diacono_r.jpg';
+import exe from '../assets/img/diacono_exe.jpg';
+import ju from '../assets/img/diacono_j.jpg';
+import al from '../assets/img/diacono_a.jpg';
+import mo from '../assets/img/diacono_m.jpg';
+import rb from '../assets/img/diacono_rb.jpg';
+import pr from '../assets/img/pcoro.jpg';
+import dr from '../assets/img/coro_d.jpg';
+import gr from '../assets/img/coro_g.jpg';
+import yb from '../assets/img/coro_y.jpg';
+import mm from '../assets/img/coro_m.jpg';
+import bt from '../assets/img/coro_b.jpg';
+import pb from '../assets/img/coro_p.jpg';
+import fb from '../assets/img/coro_f.jpg';
+import nb from '../assets/img/coro_n.jpg';
+import nbr from '../assets/img/coro_nb.jpg';
+import cr from '../assets/img/coro_c.jpg';
+import ar from '../assets/img/coro_a.jpg';
+import oz from '../assets/img/coro_o.jpg';
+import sr from '../assets/img/coro_s.jpg';
+import dt from '../assets/img/coro_dt.jpg';
+import am from '../assets/img/coro_al.jpg';
+import po from '../assets/img/p_orlando.jpg';
 //import nf from '../img/nf.jpg';
 
 //FOTOS DE ALBUM
@@ -235,17 +233,6 @@ export const locations = [
       { day: "Miércoles", time: "19:30 PM - Servicio Semanal" },
       { day: "Sábado", time: "19:30 PM - Servicio Semanal" }
     ]
-  },
-  {
-    id: 3,
-    name: "Santa Teresa",
-    address: "Las Brisas con Esperanza, Machalí", 
-    phone: "+56 9 5566 7788",
-    img: steresa,
-    mapSrc: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1650.3669748431416!2d-70.69042151323052!3d-34.17871922032238!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2scl!4v1766617450888!5m2!1ses!2scl",
-    schedule: [
-      { day: "Domingo", time: "18:00 PM - Servicio semanal (Tarde)" }
-    ]
   }
 ];
 
@@ -257,11 +244,7 @@ export const cultos = [
   { location: "La Morera", 
     days: ["Miércoles 19:30 hrs", "Sábado 19:30 hrs"], 
     locationId: 2, icon: <MapPin className="w-5 h-5" /> 
-  },
-  { location: "Santa Teresa", 
-    days: ["Domingo 18:00 hrs"], 
-    locationId: 3, icon: <Sun className="w-5 h-5" /> 
-  },
+  }
 ];
 
 export const allEvents = [
@@ -309,6 +292,20 @@ export const galleryAlbums = [
     desc: "Fortaleciendo la fe de nuestros hermanos y ungidos, siguiendo la Palabra de Dios (Josué 1:9).", 
     cover: `${BASE_GH}/2009/Conferencias/${padNumber(57)}.jpg`, 
     photos: Array.from({ length: 79 }, (_, i) => `${BASE_GH}/2009/Conferencias/${padNumber(i + 1)}.jpg`)
+  },
+  { id: 4, 
+    title: "Aniversario Iglesia 2026", 
+    year: "2026", 
+    desc: "Conmemorando un año más de la gracia del Señor. Unidos en fe y gratitud por su fidelidad.", 
+    cover: `${BASE_GH}/2026/Aniversario_Iglesia/${padNumber(46)}.jpg`, 
+    photos: Array.from({ length: 46 }, (_, i) => `${BASE_GH}/2026/Aniversario_Iglesia/${padNumber(i + 1)}.jpg`)
+  },
+  { id: 5, 
+    title: "Vigilia 2026", 
+    year: "2026", 
+    desc: "Velando en oración y comunión delante del Señor. Una noche de fe, sanidad y milagros.", 
+    cover: `${BASE_GH}/2026/Vigilia/${padNumber(1)}.jpg`, 
+    photos: Array.from({ length: 52 }, (_, i) => `${BASE_GH}/2026/Vigilia/${padNumber(i + 1)}.jpg`)
   } 
 ];
 
@@ -333,12 +330,3 @@ export const radioData = {
   stationName: "Radio",
   slogan: "La Voz Del Triunfo Pentecostal"
 };
-
-// --- DATOS PELICULAS IDENTIFIERS DE INTERNET ARCHIVE ---
-export const christianMovies = [
-  {
-    id: 1,
-    identifier: "jose-el-rey-de-los-suenos_202601",
-    duration: 5520
-  }
-];

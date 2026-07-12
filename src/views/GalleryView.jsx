@@ -12,9 +12,11 @@ const GalleryView = () => {
   // AUTOMATIC CAROUSEL LOGIC
   useEffect(() => {
     if (!galleryAlbums || galleryAlbums.length === 0) return;
+    
     const interval = setInterval(() => {
       setActiveAlbumIndex((prev) => (prev + 1) % galleryAlbums.length);
-    }, 5000);
+    }, 15000);
+    
     return () => clearInterval(interval);
   }, []);
 
@@ -77,21 +79,39 @@ const GalleryView = () => {
                   alt={galleryAlbums[activeAlbumIndex].title} 
                   draggable={false}
                   onContextMenu={(e) => e.preventDefault()}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 select-none" />
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 select-none" 
+                />
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
               </div>
               <div className="p-8 flex flex-col justify-center flex-1 relative">
                 <div className="flex items-center gap-4 mb-4">
-                    <div className="bg-[#C7DBEB]/30 dark:bg-[#3D6599]/20 text-[#3D6599] dark:text-[#C7DBEB] px-3 py-1 rounded text-center"><span className="block font-bold text-lg leading-none">{galleryAlbums[activeAlbumIndex].year}</span></div>
-                    <div className="text-stone-400 text-sm flex items-center gap-1"><ImageIcon size={14} /> {galleryAlbums[activeAlbumIndex].photos.length} Fotos</div>
+                  <div className="bg-[#C7DBEB]/30 dark:bg-[#3D6599]/20 text-[#3D6599] dark:text-[#C7DBEB] px-3 py-1 rounded text-center">
+                    <span className="block font-bold text-lg leading-none">{galleryAlbums[activeAlbumIndex].year}</span>
+                  </div>
+                  <div className="text-stone-400 text-sm flex items-center gap-1">
+                    <ImageIcon size={14} /> {galleryAlbums[activeAlbumIndex].photos.length} Fotos
+                  </div>
                 </div>
-                <h3 className="font-serif text-2xl font-bold text-stone-900 dark:text-white mb-2">{galleryAlbums[activeAlbumIndex].title}</h3>
-                <p className="text-stone-600 dark:text-stone-300 text-sm mb-4">{galleryAlbums[activeAlbumIndex].desc}</p>
-                <button className="self-start text-[#3D6599] font-bold text-sm flex items-center gap-2 group-hover:gap-3 transition-all">Abrir Galería <ArrowRight size={16} /></button>
+                <h3 className="font-serif text-2xl font-bold text-stone-900 dark:text-white mb-2">
+                  {galleryAlbums[activeAlbumIndex].title}
+                </h3>
+                <p className="text-stone-600 dark:text-stone-300 text-sm mb-4">
+                  {galleryAlbums[activeAlbumIndex].desc}
+                </p>
+                <button className="self-start text-[#3D6599] font-bold text-sm flex items-center gap-2 group-hover:gap-3 transition-all">
+                  Abrir Galería <ArrowRight size={16} />
+                </button>
                 
                 {/* Dots para móvil */}
                 <div className="flex gap-2 mt-4 lg:hidden">
-                    {galleryAlbums.map((_, i) => (<button key={i} onClick={(e) => {e.stopPropagation(); setActiveAlbumIndex(i);}} className={`w-2 h-2 rounded-full transition-all ${i === activeAlbumIndex ? 'bg-[#3D6599] w-6' : 'bg-stone-300 dark:bg-stone-700'}`} aria-label={`Ver álbum ${i + 1}`}/>))}
+                  {galleryAlbums.map((_, i) => (
+                    <button 
+                      key={`dot-${i}`} 
+                      onClick={(e) => { e.stopPropagation(); setActiveAlbumIndex(i); }} 
+                      className={`w-2 h-2 rounded-full transition-all ${i === activeAlbumIndex ? 'bg-[#3D6599] w-6' : 'bg-stone-300 dark:bg-stone-700'}`} 
+                      aria-label={`Ver álbum ${i + 1}`}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -100,8 +120,11 @@ const GalleryView = () => {
           {/* Lista Lateral (Desktop) */}
           <div className="hidden lg:grid sm:grid-cols-2 lg:grid-cols-2 gap-4 content-start">
             {galleryAlbums.filter((_, i) => i !== activeAlbumIndex).map((album) => (
-              <RevealOnScroll key={album.id} direction="right">
-                <div onClick={() => setActiveAlbumIndex(galleryAlbums.indexOf(album))} className="bg-white dark:bg-[#1e1a17] p-4 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm flex flex-col h-full hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
+              <RevealOnScroll key={album.id || album.title} direction="right">
+                <div 
+                  onClick={() => setActiveAlbumIndex(galleryAlbums.indexOf(album))} 
+                  className="bg-white dark:bg-[#1e1a17] p-4 rounded-2xl border border-stone-100 dark:border-stone-800 shadow-sm flex flex-col h-full hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer group"
+                >
                   <div className="relative h-32 rounded-xl overflow-hidden mb-3">
                     <img 
                       src={album.cover} 
@@ -114,7 +137,9 @@ const GalleryView = () => {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-[#3D6599] dark:text-[#C7DBEB] text-xs font-bold">{album.year}</span>
                   </div>
-                  <h4 className="font-serif font-bold text-stone-900 dark:text-white text-sm mb-1 leading-tight group-hover:text-[#3D6599] transition-colors">{album.title}</h4>
+                  <h4 className="font-serif font-bold text-stone-900 dark:text-white text-sm mb-1 leading-tight group-hover:text-[#3D6599] transition-colors">
+                    {album.title}
+                  </h4>
                 </div>
               </RevealOnScroll>
             ))}

@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Radio, Mic2 } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Radio, Mic2, RadioTower } from 'lucide-react';
 import RevealOnScroll from '../components/ui/RevealOnScroll';
 import { RADIO_CONFIG } from "../data/radioConfig";
 import { radioData } from "../data/mockData";
-import Logo from '../img/logo.png';
+import Logo from '../assets/img/logo.png';
 
 const RadioView = () => {
   const audioRef = useRef(null);
@@ -48,92 +48,126 @@ const RadioView = () => {
   }, []);
 
   return (
-    <div className="pt-28 pb-20 px-4 min-h-screen">
+    <div className="pt-28 pb-20 px-4 min-h-screen transition-colors duration-500 bg-gradient-to-b from-stone-50 to-stone-100 dark:from-[#141211] dark:to-[#1a1816]">
       {/* Elemento de Audio Invisible */}
       <audio ref={audioRef} src={RADIO_CONFIG.streamUrl} preload="none" crossOrigin="anonymous" />
+      
       <div className="max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center mb-16">
+          
           {/* Lado Izquierdo: Información */}
           <RevealOnScroll direction="right">
-            
-            <div className="text-center lg:text-left">
+            <div className="text-center lg:text-left space-y-6">
               {isLive && (
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 text-sm font-bold mb-6 animate-pulse">
-                  <div className="w-2 h-2 rounded-full bg-red-600"></div>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200/60 dark:border-red-900/40 text-xs font-black tracking-wider uppercase animate-pulse shadow-sm">
+                  <span className="w-2 h-2 rounded-full bg-red-500 shadow-sm shadow-red-500"></span>
                   TRANSMISIÓN CONTINUA
                 </div>
               )}
-              <h1 className="font-serif text-5xl md:text-6xl font-bold text-stone-900 dark:text-white mb-4">
+              
+              <h1 className="font-serif text-5xl md:text-7xl font-black text-stone-900 dark:text-white tracking-tight leading-none">
                 {radioData.stationName}
               </h1>
-              <p className="text-3xl text-[#3D6599] dark:text-[#C7DBEB] font-medium mb-6">
-                {radioData.slogan}
+              
+              <p className="text-2xl md:text-3xl text-[#3D6599] dark:text-[#C7DBEB] font-serif italic font-medium leading-relaxed max-w-xl">
+                "{radioData.slogan}"
               </p>
-              <p className="text-stone-600 dark:text-stone-300 mb-8 leading-relaxed">
+              
+              <p className="text-stone-600 dark:text-stone-400 max-w-md mx-auto lg:mx-0 leading-relaxed font-medium">
                 Disfruta de la mejor música cristiana, mensajes edificantes y compañía espiritual las 24 horas del día.
               </p>
             </div>
           </RevealOnScroll>
 
-          {/* Lado Derecho: Reproductor con Profundidad */}
+          {/* Lado Derecho: Reproductor de Alta Gama */}
           <RevealOnScroll direction="left">
-            <div className="flex justify-center w-full">
-              {/* Contenedor principal con mayor sombra para el efecto de profundidad */}
-              <div className="bg-white dark:bg-[#1a1816] rounded-[32px] p-8 md:p-10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)] dark:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)] border border-stone-100 dark:border-[#2a2623] relative w-full max-w-md flex flex-col items-center transition-all duration-300">
+            <div className="flex justify-center w-full relative group">
+              
+              {/* Resplandor de fondo dinámico */}
+              <div className={`absolute -inset-4 bg-gradient-to-tr from-[#3D6599]/20 to-[#C7DBEB]/20 rounded-[44px] blur-3xl opacity-70 transition-opacity duration-700 ${isPlaying ? 'opacity-100' : 'opacity-40'}`} />
 
-                {/* Carátula Cuadrada (Más pequeña) */}
-                <div className="w-32 h-32 md:w-36 md:h-36 rounded-2xl overflow-hidden mb-8 shadow-xl dark:shadow-2xl">
-                  {coverUrl ? (
-                    <img
-                      src={coverUrl}
-                      alt="Carátula actual"
-                      className="w-full h-full object-cover"
-                    />
+              {/* Contenedor Principal */}
+              <div className="bg-white/80 dark:bg-[#1a1816]/90 backdrop-blur-xl rounded-[40px] p-8 md:p-10 shadow-[0_32px_64px_-16px_rgba(45,38,34,0.12)] dark:shadow-[0_40px_80px_-24px_rgba(0,0,0,0.7)] border border-white/60 dark:border-stone-800/60 relative w-full max-w-md flex flex-col items-center z-10 transition-transform duration-500 hover:scale-[1.01]">
+                
+                {/* Zona de Carátula con Efecto Aura */}
+                <div className="relative mb-8 group/cover">
+                  <div className={`absolute inset-0 bg-[#3D6599]/30 rounded-3xl blur-xl transition-transform duration-1000 scale-95 ${isPlaying ? 'animate-pulse scale-105' : ''}`} />
+                  
+                  <div className={`w-40 h-40 md:w-44 md:h-44 rounded-3xl overflow-hidden relative shadow-2xl border-2 border-white dark:border-stone-800 transition-transform duration-700 ${isPlaying ? 'scale-105' : ''}`}>
+                    {coverUrl ? (
+                      <img
+                        src={coverUrl}
+                        alt="Logo Estación"
+                        className={`w-full h-full object-cover select-none transition-transform duration-[10000ms] ease-linear ${isPlaying ? 'rotate-360' : ''}`}
+                        style={{ animationIterationCount: 'infinite' }}
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-stone-100 dark:bg-stone-900">
+                        <Radio size={56} className="text-[#3D6599] dark:text-[#C7DBEB]" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Info de Transmisión */}
+                <div className="text-center w-full mb-6">
+                  <h3 className="text-2xl font-extrabold text-stone-800 dark:text-stone-100 tracking-tight mb-1.5 flex items-center justify-center gap-2">
+                    {nowPlaying.title}
+                  </h3>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#3D6599] dark:text-[#C7DBEB] flex items-center justify-center gap-1.5">
+                    <Mic2 size={12} /> {nowPlaying.artist}
+                  </p>
+                </div>
+
+                {/* Ecualizador Visual / Línea de Onda */}
+                <div className="w-full flex items-center justify-center gap-1 h-8 mb-8 px-4 overflow-hidden">
+                  {isPlaying ? (
+                    // Barras animadas cuando está activo
+                    Array.from({ length: 17 }).map((_, i) => {
+                      const delays = [0.2, 0.4, 0.6, 0.3, 0.7, 0.1, 0.5, 0.8, 0.2, 0.6, 0.4, 0.9, 0.1, 0.5, 0.3, 0.7, 0.2];
+                      const heights = ['h-3', 'h-5', 'h-7', 'h-4', 'h-6', 'h-3', 'h-5', 'h-7', 'h-4', 'h-6', 'h-3', 'h-5', 'h-7', 'h-4', 'h-6', 'h-3', 'h-5'];
+                      return (
+                        <span 
+                          key={i} 
+                          className={`w-1 bg-[#3D6599] dark:bg-[#C7DBEB] rounded-full transition-all duration-300 ${heights[i % heights.length]}`}
+                          style={{
+                            animation: `bounce 1s ease-in-out infinite alternate`,
+                            animationDelay: `${delays[i % delays.length]}s`
+                          }}
+                        />
+                      );
+                    })
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-stone-100 dark:bg-stone-800">
-                      <Radio size={48} className="text-[#3D6599] dark:text-[#C7DBEB]" />
+                    // Onda en reposo plano
+                    <div className="w-full h-[3px] bg-stone-200 dark:bg-stone-800 rounded-full relative">
+                      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-2">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <span key={i} className="w-1.5 h-1.5 rounded-full bg-stone-300 dark:bg-stone-700" />
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
 
-                {/* Info del Programa */}
-                <h3 className="text-2xl font-bold text-stone-800 dark:text-white mb-1 text-center">
-                  {nowPlaying.title}
-                </h3>
-                <p className="text-sm text-stone-500 dark:text-stone-400 mb-8 text-center flex items-center justify-center gap-2">
-                  <Mic2 size={14} /> <span>{nowPlaying.artist}</span>
-                </p>
-
-                {/* Barra de Progreso (Línea de tiempo para 24/7) */}
-                <div className="w-full flex items-center gap-3 mb-10 px-3">
-                  {/* Texto VIVO con parpadeo */}
-                  <span className="text-[11px] font-bold text-red-500 animate-pulse">VIVO</span>
-                  <div className="flex-1 h-1.5 bg-stone-200 dark:bg-stone-700/50 rounded-full relative">
-                    {/* Barra de color al 100% */}
-                    <div className="absolute left-0 top-0 h-full w-full bg-[#3D6599] rounded-full"></div>
-                    {/* Círculo indicador fijo al final */}
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-3.5 h-3.5 bg-[#3D6599] rounded-full shadow-md border-[2px] border-stone-100 dark:border-[#1a1816]"></div>
-                  </div>
-                  <span className="text-[11px] font-bold text-stone-400">24/7</span>
-                </div>
-
-                {/* Controles: Volumen y Play */}
-                <div className="flex items-center justify-center gap-4 w-full">
+                {/* Controles Principales */}
+                <div className="flex items-center justify-between w-full bg-stone-50/50 dark:bg-stone-900/30 p-4 rounded-full border border-stone-100 dark:border-stone-800/40">
                   
-                  {/* Contenedor Volumen (Izquierda) */}
-                  <div ref={volumeRef} className="relative flex items-center">
+                  {/* Control Integrado de Volumen Círculo */}
+                  <div ref={volumeRef} className="flex items-center gap-2">
                     <button
                       onClick={() => setShowVolume(!showVolume)}
-                      className="w-12 h-12 rounded-full bg-stone-50 dark:bg-[#221f1d] text-stone-600 dark:text-stone-300 flex items-center justify-center shadow-sm border border-stone-100 dark:border-[#2f2b28] hover:scale-105 transition-all"
+                      className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${
+                        showVolume || volume === 0 
+                          ? 'bg-[#3D6599] text-white shadow-md shadow-[#3D6599]/20' 
+                          : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 shadow-sm border border-stone-200/50 dark:border-stone-700/50 hover:bg-stone-100'
+                      }`}
+                      aria-label="Ajustar Volumen"
                     >
-                      {volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                      {volume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
                     </button>
 
-                    {/* DESKTOP: Slider Horizontal (Como el original) */}
-                    <div
-                      className={`hidden md:flex items-center overflow-hidden transition-all duration-300 ease-out
-                      ${showVolume ? "w-24 opacity-100 ml-3" : "w-0 opacity-0 ml-0"}`}
-                    >
+                    {/* Barra de Volumen Horizontal Desplegable Amigable */}
+                    <div className={`flex items-center overflow-hidden transition-all duration-300 ease-out ${showVolume ? "w-24 opacity-100 px-1" : "w-0 opacity-0"}`}>
                       <input
                         type="range"
                         min="0"
@@ -141,47 +175,30 @@ const RadioView = () => {
                         step="0.01"
                         value={volume}
                         onChange={(e) => setVolume(parseFloat(e.target.value))}
-                        className="w-24 h-1.5 bg-stone-200 dark:bg-stone-700 rounded-full appearance-none cursor-pointer accent-[#3D6599] dark:accent-[#C7DBEB]"
+                        className="w-full h-1 bg-stone-200 dark:bg-stone-700 rounded-full appearance-none cursor-pointer accent-[#3D6599] dark:accent-[#C7DBEB]"
                       />
                     </div>
-
-                    {/* MOBILE: Slider Vertical Corto */}
-                    {showVolume && (
-                      <div
-                        className="md:hidden absolute bottom-full mb-3 left-1/2 -translate-x-1/2 bg-white dark:bg-stone-800 border border-stone-100 dark:border-stone-700 px-2 py-3 rounded-2xl shadow-xl animate-in fade-in slide-in-from-bottom-2 z-20"
-                      >
-                        <input
-                          type="range"
-                          min="0"
-                          max="1"
-                          step="0.01"
-                          value={volume}
-                          onChange={(e) => setVolume(parseFloat(e.target.value))}
-                          className="h-16 w-1.5 bg-stone-200 dark:bg-stone-700 rounded-full appearance-none cursor-pointer accent-[#3D6599] dark:accent-[#C7DBEB]"
-                          style={{
-                            writingMode: "vertical-rl",
-                            direction: "rtl",
-                          }}
-                        />
-                      </div>
-                    )}
                   </div>
 
-                  {/* Botón Play (Centro con el color original) */}
+                  {/* Botón Central Play / Pause Círculo */}
                   <button 
                     onClick={togglePlay}
-                    className="w-20 h-20 rounded-full bg-[#3D6599] text-white flex items-center justify-center shadow-lg shadow-[#3D6599]/30 hover:scale-105 hover:bg-[#2d4b73] transition-all duration-300 z-10"
+                    className="w-16 h-16 rounded-full bg-[#3D6599] hover:bg-[#32537d] text-white flex items-center justify-center shadow-lg shadow-[#3D6599]/20 transition-all duration-300 transform active:scale-95"
+                    aria-label={isPlaying ? 'Pausar Radio' : 'Reproducir Radio'}
                   >
-                    {isPlaying ? <Pause size={32} fill="currentColor" /> : <Play size={32} fill="currentColor" className="ml-1" />}
+                    {isPlaying ? <Pause size={26} fill="currentColor" /> : <Play size={26} fill="currentColor" className="ml-1" />}
                   </button>
 
-                  {/* Espacio vacío para balancear el botón de volumen y mantener el Play al centro */}
-                  <div className="w-12 h-12"></div>
+                  {/* Identificador Estado de Antena Círculo */}
+                  <div className="flex items-center justify-center w-11 h-11 rounded-full bg-white dark:bg-stone-800 border border-stone-200/50 dark:border-stone-700/50 text-stone-400 dark:text-stone-500 shadow-sm">
+                    <RadioTower size={18} className={isPlaying ? 'text-emerald-500 dark:text-emerald-400' : ''} />
+                  </div>
                 </div>
 
               </div>
             </div>
           </RevealOnScroll>
+          
         </div>
       </div>
     </div>
