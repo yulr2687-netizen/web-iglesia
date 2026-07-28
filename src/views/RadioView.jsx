@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, Radio, Mic2, RadioTower } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Radio, Mic2, RadioTower, ListMusic, X, History, Music2 } from 'lucide-react';
 import RevealOnScroll from '../components/ui/RevealOnScroll';
 import { RADIO_CONFIG } from "../data/radioConfig";
 import { radioData } from "../data/mockData";
@@ -7,17 +7,45 @@ import Logo from '../assets/img/logo.png';
 
 const RadioView = () => {
   const audioRef = useRef(null);
+  const volumeRef = useRef(null);
+  const playerCardRef = useRef(null);
+  const currentSongRef = useRef("");
+
   const [volume, setVolume] = useState(1);
   const [showVolume, setShowVolume] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [nowPlaying] = useState({
-    title: "Radio en Vivo",
-    artist: "Transmisión 24/7",
-  });
-  const volumeRef = useRef(null);
+  const [showHistoryDrawer, setShowHistoryDrawer] = useState(false);
   
-  const coverUrl = Logo;
+  const [nowPlaying, setNowPlaying] = useState({
+    title: "Cargando...",
+    artist: "Radio en Vivo",
+  });
+  const [isChangingSong, setIsChangingSong] = useState(false);
+  
+  const [coverUrl, setCoverUrl] = useState(Logo);
+  const [songHistory, setSongHistory] = useState([]);
   const [isLive] = useState(true);
+
+  const formatPlayedTime = (date) => {
+
+    if (!date || isNaN(new Date(date))) {
+      return "Reciente";
+    }
+
+    const diff = Math.floor(
+     (new Date() - new Date(date)) / 60000
+    );
+
+    if (diff <= 1) {
+      return "Hace 1 minuto";
+    }
+
+    if (diff === 2) {
+      return "Hace 2 minuto";
+    }
+
+    return `Hace ${diff} minutos`;
+  };
 
   const togglePlay = () => {
     if (isPlaying) {
@@ -41,10 +69,79 @@ const RadioView = () => {
       if (volumeRef.current && !volumeRef.current.contains(e.target)) {
         setShowVolume(false);
       }
+      if (playerCardRef.current && !playerCardRef.current.contains(e.target)) {
+        setShowHistoryDrawer(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Fetch Metadata & Historial
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      try {
+        const response = await fetch(
+          "https://player.extassisnetwork.com/api.php?url=https://radios.mipanel.stream:6924/stream"
+        );
+
+        const data = await response.json();
+
+        const songIdentifier = `${data.artist}-${data.song}`;
+
+        if (data.song && data.artist && songIdentifier !== currentSongRef.current) {
+          currentSongRef.current = songIdentifier;
+          setIsChangingSong(true);
+
+          setTimeout (() => {
+            setNowPlaying({
+              title: data.song,
+              artist: data.artist,
+          });
+
+          setIsChangingSong(false);
+          }, 300);
+        }
+
+        if (data.cover) {
+          setCoverUrl(data.cover);
+        }
+
+        if (data.song_history) {
+          setSongHistory((prevHistory) => {
+            return data.song_history
+            .slice(1, 11)
+            .map((item, index) => {
+              const existingSong = prevHistory.find(
+                (old) =>
+                  old?.song?.title === item?.song?.title &&
+                  old?.song?.artist === item?.song?.artist
+              );
+
+              return {
+                ...item,
+                playedAt: existingSong?.playedAt || new Date(Date.now() - index * 180000)
+              };
+            });
+          });
+        }
+      } catch (error) {
+        console.error("Error obteniendo metadata:", error);
+
+        setNowPlaying({
+          title: "Radio en Vivo",
+          artist: "Transmisión 24/7",
+        });
+
+        setCoverUrl(Logo);
+      }
+    };
+
+    fetchMetadata();
+    const interval = setInterval(fetchMetadata, 15000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -86,20 +183,107 @@ const RadioView = () => {
               {/* Resplandor de fondo dinámico */}
               <div className={`absolute -inset-4 bg-gradient-to-tr from-[#3D6599]/20 to-[#C7DBEB]/20 rounded-[44px] blur-3xl opacity-70 transition-opacity duration-700 ${isPlaying ? 'opacity-100' : 'opacity-40'}`} />
 
-              {/* Contenedor Principal */}
-              <div className="bg-white/80 dark:bg-[#1a1816]/90 backdrop-blur-xl rounded-[40px] p-8 md:p-10 shadow-[0_32px_64px_-16px_rgba(45,38,34,0.12)] dark:shadow-[0_40px_80px_-24px_rgba(0,0,0,0.7)] border border-white/60 dark:border-stone-800/60 relative w-full max-w-md flex flex-col items-center z-10 transition-transform duration-500 hover:scale-[1.01]">
+              {/* Contenedor Principal del Reproductor */}
+              <div 
+                ref={playerCardRef}
+                className="bg-white/80 dark:bg-[#1a1816]/90 backdrop-blur-xl rounded-[40px] p-8 md:p-10 shadow-[0_32px_64px_-16px_rgba(45,38,34,0.12)] dark:shadow-[0_40px_80px_-24px_rgba(0,0,0,0.7)] border border-white/60 dark:border-stone-800/60 relative w-full max-w-md flex flex-col items-center z-10 transition-transform duration-500 hover:scale-[1.01] overflow-hidden"
+              >
                 
+                {/* Botón Menú Hamburguesa / Historial (Esquina Superior Derecha) */}
+                <button
+                  onClick={() => setShowHistoryDrawer(!showHistoryDrawer)}
+                  className="absolute top-6 right-6 p-2.5 rounded-full bg-stone-100/80 dark:bg-stone-800/80 text-stone-700 dark:text-stone-300 hover:text-[#3D6599] dark:hover:text-[#C7DBEB] hover:bg-stone-200/80 dark:hover:bg-stone-700/80 transition-all z-30 focus:outline-none"
+                  aria-label="Ver historial de canciones"
+                  title="Historial de reproducción"
+                >
+                  {showHistoryDrawer ? <X size={20} /> : <ListMusic size={20} />}
+                </button>
+
+                {/* Panel Historial Desplazable (Drawer Lateral - Ancho máximo ~82%) */}
+                <div 
+                  className={`absolute top-0 right-0 h-full w-[82%] sm:w-[78%] bg-white/95 dark:bg-[#181614]/95 backdrop-blur-2xl z-20 p-6 flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.15)] border-l border-stone-200/50 dark:border-stone-800/60 transition-transform duration-500 ease-in-out ${
+                    showHistoryDrawer ? 'translate-x-0' : 'translate-x-full'
+                  }`}
+                >
+                  {/* Encabezado Drawer */}
+                  <div className="flex items-center gap-2 pb-4 mb-4 border-b border-stone-200/60 dark:border-stone-800/60">
+                    <History size={18} className="text-[#3D6599] dark:text-[#C7DBEB]" />
+                    <h4 className="font-extrabold text-sm uppercase tracking-wider text-stone-800 dark:text-stone-100">
+                      Historial Reciente
+                    </h4>
+                  </div>
+
+                  {/* REPRODUCIENDO AHORA */}
+                  <div className='mb-4 p-3 rounded-2xl bg-gradient-to-r from-[#3D6599]/10 to-[#C7DBEB]/10 border border-[#3D6599]/20 dark:border-[#C7DBEB]/20'>
+                    <div className='flex items-center gap-2 mb-2'>
+                      <div className='w-2 h-2 rounded-full bg-red-500 animate-pulse'></div>
+                      <span className='text-[10px] font-black tracking-[0.2em] uppercase text-[#3D6599] dark:text-[#C7DBEB]'>
+                        Reproduciendo Ahora
+                      </span>
+                    </div>
+
+                    <p className='font-bold text-sm text-stone-800 dark:text-stone-100 line-clamp-1'>
+                      {nowPlaying.title}
+                    </p>
+
+                    <p className='text-xs text-stone-500 dark:text-stone-400 line-clamp-1'>
+                      {nowPlaying.artist}
+                    </p>
+                  </div>
+
+                  {/* Lista de Canciones con Scroll Personalizado */}
+                  <div className="flex-1 overflow-y-auto pr-1.5 space-y-3 custom-scrollbar">
+                    {songHistory.length > 0 ? (
+                      songHistory.map((item, index) => (
+                        <div 
+                          key={index}
+                          className="flex items-center gap-3 p-3 rounded-2xl bg-stone-50/80 dark:bg-stone-900/50 border border-stone-100 dark:border-stone-800/60 hover:border-[#3D6599]/30 transition-colors"
+                        >
+                          {/* MINI PORTADA */}
+                          <div className='w-10 h-10 shrink-0 rounded-xl bg-[#3D6599]/10 dark:bg-[#C7DBEB]/10 flex items-center justify-center overflow-hidden'>
+                            <Music2
+                              size={18}
+                              className='text-[#3D6599] dark:text-[#C7DBEB]'
+                            />
+                          </div>
+
+                          {/* INFORMACIÓN */}
+                          <div className='min-w-0 flex-1'>
+                            <p className="font-bold text-xs text-stone-800 dark:text-stone-200 line-clamp-1">
+                              {item?.song?.title || item?.title || "Canción sin título"}
+                            </p>
+
+                            <p className="text-[11px] font-medium text-stone-500 dark:text-stone-400 line-clamp-1 mt-0.5">
+                              {item?.song?.artist || item?.artist || "Artista desconocido"}
+                            </p>
+
+                            <p className='text-[10px] text-[#3D6599] dark:text-[#C7DBEB] mt-1'>
+                              {formatPlayedTime(item.playedAt)}
+                            </p>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-xs text-stone-400 text-center py-8 font-medium">
+                        Sin historial disponible
+                      </p>
+                    )}
+                  </div>
+                </div>
+
                 {/* Zona de Carátula con Efecto Aura */}
-                <div className="relative mb-8 group/cover">
+                <div className="relative mb-8 group/cover mt-2">
                   <div className={`absolute inset-0 bg-[#3D6599]/30 rounded-3xl blur-xl transition-transform duration-1000 scale-95 ${isPlaying ? 'animate-pulse scale-105' : ''}`} />
                   
                   <div className={`w-40 h-40 md:w-44 md:h-44 rounded-3xl overflow-hidden relative shadow-2xl border-2 border-white dark:border-stone-800 transition-transform duration-700 ${isPlaying ? 'scale-105' : ''}`}>
                     {coverUrl ? (
                       <img
+                        key={coverUrl}
                         src={coverUrl}
-                        alt="Logo Estación"
-                        className={`w-full h-full object-cover select-none transition-transform duration-[10000ms] ease-linear ${isPlaying ? 'rotate-360' : ''}`}
-                        style={{ animationIterationCount: 'infinite' }}
+                        alt="Logo"
+                        className={`w-full h-full object-cover select-none transition-all duration-700 ${isPlaying 
+                        ? 'scale-105 rotate-0' 
+                        : 'scale-100'}`}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-stone-100 dark:bg-stone-900">
@@ -110,19 +294,18 @@ const RadioView = () => {
                 </div>
 
                 {/* Info de Transmisión */}
-                <div className="text-center w-full mb-6">
-                  <h3 className="text-2xl font-extrabold text-stone-800 dark:text-stone-100 tracking-tight mb-1.5 flex items-center justify-center gap-2">
+                <div className={`text-center w-full mb-6 transition-all duration-500 ${isChangingSong ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"}`}>
+                  <h3 className="text-2xl font-extrabold text-stone-800 dark:text-stone-100 tracking-tight mb-1.5 flex items-center justify-center gap-2 px-2 line-clamp-1">
                     {nowPlaying.title}
                   </h3>
-                  <p className="text-xs font-bold uppercase tracking-widest text-[#3D6599] dark:text-[#C7DBEB] flex items-center justify-center gap-1.5">
-                    <Mic2 size={12} /> {nowPlaying.artist}
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#3D6599] dark:text-[#C7DBEB] flex items-center justify-center gap-1.5 px-2 line-clamp-1">
+                    <Mic2 size={12} className="shrink-0" /> {nowPlaying.artist}
                   </p>
                 </div>
 
                 {/* Ecualizador Visual / Línea de Onda */}
                 <div className="w-full flex items-center justify-center gap-1 h-8 mb-8 px-4 overflow-hidden">
                   {isPlaying ? (
-                    // Barras animadas cuando está activo
                     Array.from({ length: 17 }).map((_, i) => {
                       const delays = [0.2, 0.4, 0.6, 0.3, 0.7, 0.1, 0.5, 0.8, 0.2, 0.6, 0.4, 0.9, 0.1, 0.5, 0.3, 0.7, 0.2];
                       const heights = ['h-3', 'h-5', 'h-7', 'h-4', 'h-6', 'h-3', 'h-5', 'h-7', 'h-4', 'h-6', 'h-3', 'h-5', 'h-7', 'h-4', 'h-6', 'h-3', 'h-5'];
@@ -138,7 +321,6 @@ const RadioView = () => {
                       );
                     })
                   ) : (
-                    // Onda en reposo plano
                     <div className="w-full h-[3px] bg-stone-200 dark:bg-stone-800 rounded-full relative">
                       <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-2">
                         {Array.from({ length: 5 }).map((_, i) => (
@@ -152,7 +334,7 @@ const RadioView = () => {
                 {/* Controles Principales */}
                 <div className="flex items-center justify-between w-full bg-stone-50/50 dark:bg-stone-900/30 p-4 rounded-full border border-stone-100 dark:border-stone-800/40">
                   
-                  {/* Control Integrado de Volumen Círculo */}
+                  {/* Control Integrado de Volumen */}
                   <div ref={volumeRef} className="flex items-center gap-2">
                     <button
                       onClick={() => setShowVolume(!showVolume)}
@@ -166,7 +348,6 @@ const RadioView = () => {
                       {volume === 0 ? <VolumeX size={18} /> : <Volume2 size={18} />}
                     </button>
 
-                    {/* Barra de Volumen Horizontal Desplegable Amigable */}
                     <div className={`flex items-center overflow-hidden transition-all duration-300 ease-out ${showVolume ? "w-24 opacity-100 px-1" : "w-0 opacity-0"}`}>
                       <input
                         type="range"
@@ -175,12 +356,12 @@ const RadioView = () => {
                         step="0.01"
                         value={volume}
                         onChange={(e) => setVolume(parseFloat(e.target.value))}
-                        className="w-full h-1 bg-stone-200 dark:bg-stone-700 rounded-full appearance-none cursor-pointer accent-[#3D6599] dark:accent-[#C7DBEB]"
+                        className="volume-slider"
                       />
                     </div>
                   </div>
 
-                  {/* Botón Central Play / Pause Círculo */}
+                  {/* Botón Central Play / Pause */}
                   <button 
                     onClick={togglePlay}
                     className="w-16 h-16 rounded-full bg-[#3D6599] hover:bg-[#32537d] text-white flex items-center justify-center shadow-lg shadow-[#3D6599]/20 transition-all duration-300 transform active:scale-95"
@@ -189,8 +370,11 @@ const RadioView = () => {
                     {isPlaying ? <Pause size={26} fill="currentColor" /> : <Play size={26} fill="currentColor" className="ml-1" />}
                   </button>
 
-                  {/* Identificador Estado de Antena Círculo */}
-                  <div className="flex items-center justify-center w-11 h-11 rounded-full bg-white dark:bg-stone-800 border border-stone-200/50 dark:border-stone-700/50 text-stone-400 dark:text-stone-500 shadow-sm">
+                  {/* Identificador Estado de Antena */}
+                  <div className={`flex items-center justify-center w-11 h-11 rounded-full border shadow-sm transition-all duration-500 
+                    ${isPlaying ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-700 shadow-emerald-500/20 animate-pulse'
+                    : 'bg-white dark:bg-stone-800 border-stone-200/50 dark:border-stone-700/50 text-stone-400 dark:text-stone-500'}`}
+                  >
                     <RadioTower size={18} className={isPlaying ? 'text-emerald-500 dark:text-emerald-400' : ''} />
                   </div>
                 </div>
