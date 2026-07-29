@@ -22,6 +22,18 @@ import GalleryView from './views/GalleryView';
 import ReceptionView from './views/ReceptionView';
 import RadioView from './views/RadioView';
 
+// Mapeos de hashes amigables para la URL en español
+const urlMap = {
+  'liderazgo': 'leadership', 
+  'recepcion': 'reception', 
+  'coro': 'choir',
+  'visitanos': 'visitanos', 
+  'galeria': 'gallery', 
+  'radio': 'radio', 
+  'inicio': 'home'
+};
+const reverseUrlMap = Object.fromEntries(Object.entries(urlMap).map(([k, v]) => [v, k]));
+
 const App = () => {
   // --- CONFIGURACIÓN DE TEMA OSCURO ---
   const [darkMode, setDarkMode] = useState(() => {
@@ -41,13 +53,6 @@ const App = () => {
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
-  // Mapeos de hashes amigables para la URL en español
-  const urlMap = {
-    'liderazgo': 'leadership', 'recepcion': 'reception', 'coro': 'choir',
-    'visitanos': 'visitanos', 'galeria': 'gallery', 'radio': 'radio', 'inicio': 'home'
-  };
-  const reverseUrlMap = Object.fromEntries(Object.entries(urlMap).map(([k, v]) => [v, k]));
 
   // Tracking del scroll de secciones nativas de Home
   useScrollEffect(['inicio', 'sobre-nosotros', 'servicios', 'eventos', 'ubicacion'], setActiveSection, currentView === 'home');
@@ -116,9 +121,9 @@ const App = () => {
     const spanishName = reverseUrlMap[targetView] || viewId;
 
     if (targetView === 'home') {
-      window.history.pushState({ view: 'home' }, '', window.location.pathname);
+      window.history.pushState({ view: 'home' }, '', '/');
     } else {
-      window.history.pushState({ view: targetView }, '', `#${spanishName}`);
+      window.history.pushState({ view: targetView }, '', `/${spanishName}`);
     }
 
     if (currentView !== targetView) setCurrentView(targetView);
@@ -133,13 +138,24 @@ const App = () => {
   };
 
   useEffect(() => {
-    const handlePopState = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (!hash) { setCurrentView('home'); return; }
-      if (urlMap[hash]) setCurrentView(urlMap[hash]);
+    const handleRoute = () => {
+      const path = window.location.pathname.replace('/', '');
+
+      if (!path) { 
+        setCurrentView('home'); 
+        return; 
+      }
+
+      if (urlMap[path]) {
+        setCurrentView(urlMap[path]);
+      }
     };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+
+    handleRoute();
+
+    window.addEventListener('popstate', handleRoute);
+    
+    return () => window.removeEventListener('popstate', handleRoute);
   }, []);
 
   useEffect(() => {
