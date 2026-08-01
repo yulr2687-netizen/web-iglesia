@@ -4,12 +4,32 @@ import RevealOnScroll from '../components/ui/RevealOnScroll';
 import { RADIO_CONFIG } from "../data/radioConfig";
 import { radioData } from "../data/mockData";
 import Logo from '../assets/img/logo.png';
+import { customCovers } from '../data/customCovers';
 
 const RadioView = () => {
   const audioRef = useRef(null);
   const volumeRef = useRef(null);
   const playerCardRef = useRef(null);
   const currentSongRef = useRef("");
+
+  const normalizeSongName = (text) => {
+    return (text || "")
+      .trim()
+      .toLowerCase()
+
+      //ELIMINA LAS TILDES (CONSERVA LA Ñ)
+      .replace(/[áàäâã]/g, "a")
+      .replace(/[éèëê]/g, "e")
+      .replace(/[íìïî]/g, "i")
+      .replace(/[óòöôõ]/g, "o")
+      .replace(/[úùüû]/g, "u")
+
+      //ELIMINA SIGNOS
+      .replace(/[¿?¡!.,;:()[\]{}"'`]/g, "")
+
+      //REEMPLAZA MULTIPLES ESPACIOS POR UNO
+      .replace(/\s+/g, " ")
+  };
 
   const [volume, setVolume] = useState(1);
   const [showVolume, setShowVolume] = useState(false);
@@ -104,7 +124,12 @@ const RadioView = () => {
           }, 300);
         }
 
-        if (data.cover) {
+        const songKey = normalizeSongName(data.song);
+        const matchedKey = Object.keys(customCovers).find((key) => songKey.includes(normalizeSongName(key)));
+      
+        if (matchedKey) {
+          setCoverUrl(customCovers[matchedKey]);
+        } else if (data.cover?.trim()) {
           setCoverUrl(data.cover);
         }
 
@@ -139,7 +164,7 @@ const RadioView = () => {
     };
 
     fetchMetadata();
-    const interval = setInterval(fetchMetadata, 15000);
+    const interval = setInterval(fetchMetadata, 4000);
 
     return () => clearInterval(interval);
   }, []);
@@ -147,7 +172,18 @@ const RadioView = () => {
   return (
     <div className="pt-28 pb-20 px-4 min-h-screen transition-colors duration-500 bg-gradient-to-b from-stone-50 to-stone-100 dark:from-[#141211] dark:to-[#1a1816]">
       {/* Elemento de Audio Invisible */}
-      <audio ref={audioRef} src={RADIO_CONFIG.streamUrl} preload="none" crossOrigin="anonymous" />
+      <audio 
+        ref={audioRef} 
+        src={RADIO_CONFIG.streamUrl} 
+        preload="none" 
+        crossOrigin="anonymous"
+        onEnded={() => {
+          if (isPlaying) {
+            audioRef.current.load();
+            audioRef.current.play().catch(() => {});
+          }
+        }}
+      />
       
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center mb-16">
