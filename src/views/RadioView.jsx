@@ -11,6 +11,9 @@ const RadioView = () => {
   const volumeRef = useRef(null);
   const playerCardRef = useRef(null);
   const currentSongRef = useRef("");
+  const errorTimerRef = useRef(null);
+  const waitingForLiveRef = useRef(false);
+  const isLiveModeRef = useRef(false);
 
   const normalizeSongName = (text) => {
     return (text || "")
@@ -108,6 +111,47 @@ const RadioView = () => {
 
         const data = await response.json();
 
+        if (data.error) {
+
+          // MOSTRANDO EL LIVE
+          if (isLiveModeRef.current) {
+            return;
+          }
+
+          // ESPERANDO CONFIRMAR LIVE
+          if (!waitingForLiveRef.current) {
+
+            waitingForLiveRef.current = true;
+
+            errorTimerRef.current = setTimeout(() => {
+
+              isLiveModeRef.current = true;
+
+              setNowPlaying({
+                title: "En Vivo",
+                artist: "La Voz Del Triunfo Pentecostal"
+              });
+
+              setCoverUrl(Logo);
+
+            }, 10000);
+
+          }
+
+          return;
+        }
+
+        // METADATA OBTENIDA CORRECTAMENTE
+        if (errorTimerRef.current) {
+
+          clearTimeout(errorTimerRef.current);
+          errorTimerRef.current = null;
+        }
+
+        waitingForLiveRef.current = false;
+
+        isLiveModeRef.current = false;
+
         const songIdentifier = `${data.artist}-${data.song}`;
 
         if (data.song && data.artist && songIdentifier !== currentSongRef.current) {
@@ -164,14 +208,14 @@ const RadioView = () => {
     };
 
     fetchMetadata();
-    const interval = setInterval(fetchMetadata, 4000);
+    const interval = setInterval(fetchMetadata, 5000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="pt-28 pb-20 px-4 min-h-screen transition-colors duration-500 bg-gradient-to-b from-stone-50 to-stone-100 dark:from-[#141211] dark:to-[#1a1816]">
-      {/* Elemento de Audio Invisible */}
+      {/* ELEMENTO DE AUDIO INVISIBLE */}
       <audio 
         ref={audioRef} 
         src={RADIO_CONFIG.streamUrl} 
@@ -188,7 +232,7 @@ const RadioView = () => {
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center mb-16">
           
-          {/* Lado Izquierdo: Información */}
+          {/* LADO IZQUIERDO: INFORMACIÓN */}
           <RevealOnScroll direction="right">
             <div className="text-center lg:text-left space-y-6">
               {isLive && (
@@ -212,20 +256,20 @@ const RadioView = () => {
             </div>
           </RevealOnScroll>
 
-          {/* Lado Derecho: Reproductor de Alta Gama */}
+          {/* LADO DERECHO: REPRODUCOR DE ALTA GAMA */}
           <RevealOnScroll direction="left">
             <div className="flex justify-center w-full relative group">
               
-              {/* Resplandor de fondo dinámico */}
+              {/* RESPLANDOR DE FONDO DINÁMICO */}
               <div className={`absolute -inset-4 bg-gradient-to-tr from-[#3D6599]/20 to-[#C7DBEB]/20 rounded-[44px] blur-3xl opacity-70 transition-opacity duration-700 ${isPlaying ? 'opacity-100' : 'opacity-40'}`} />
 
-              {/* Contenedor Principal del Reproductor */}
+              {/* CONTENEDOR PRINCIPAL DEL REPRODUCOR */}
               <div 
                 ref={playerCardRef}
                 className="bg-white/80 dark:bg-[#1a1816]/90 backdrop-blur-xl rounded-[40px] p-8 md:p-10 shadow-[0_32px_64px_-16px_rgba(45,38,34,0.12)] dark:shadow-[0_40px_80px_-24px_rgba(0,0,0,0.7)] border border-white/60 dark:border-stone-800/60 relative w-full max-w-md flex flex-col items-center z-10 transition-transform duration-500 hover:scale-[1.01] overflow-hidden"
               >
                 
-                {/* Botón Menú Hamburguesa / Historial (Esquina Superior Derecha) */}
+                {/* BOTÓN MENÚ HAMBURGUESA / HISTORIAL (ESQUINA SUPERIOR DERECHA) */}
                 <button
                   onClick={() => setShowHistoryDrawer(!showHistoryDrawer)}
                   className="absolute top-6 right-6 p-2.5 rounded-full bg-stone-100/80 dark:bg-stone-800/80 text-stone-700 dark:text-stone-300 hover:text-[#3D6599] dark:hover:text-[#C7DBEB] hover:bg-stone-200/80 dark:hover:bg-stone-700/80 transition-all z-30 focus:outline-none"
@@ -235,13 +279,13 @@ const RadioView = () => {
                   {showHistoryDrawer ? <X size={20} /> : <ListMusic size={20} />}
                 </button>
 
-                {/* Panel Historial Desplazable (Drawer Lateral - Ancho máximo ~82%) */}
+                {/* PANEL HISTORIAL DESPLAZABLE */}
                 <div 
                   className={`absolute top-0 right-0 h-full w-[82%] sm:w-[78%] bg-white/95 dark:bg-[#181614]/95 backdrop-blur-2xl z-20 p-6 flex flex-col shadow-[-10px_0_30px_rgba(0,0,0,0.15)] border-l border-stone-200/50 dark:border-stone-800/60 transition-transform duration-500 ease-in-out ${
                     showHistoryDrawer ? 'translate-x-0' : 'translate-x-full'
                   }`}
                 >
-                  {/* Encabezado Drawer */}
+                  {/* ENCABEZADO DRAWER */}
                   <div className="flex items-center gap-2 pb-4 mb-4 border-b border-stone-200/60 dark:border-stone-800/60">
                     <History size={18} className="text-[#3D6599] dark:text-[#C7DBEB]" />
                     <h4 className="font-extrabold text-sm uppercase tracking-wider text-stone-800 dark:text-stone-100">
@@ -267,7 +311,7 @@ const RadioView = () => {
                     </p>
                   </div>
 
-                  {/* Lista de Canciones con Scroll Personalizado */}
+                  {/* LISTA DE CANCIONES SCROLL PERSONALIZADO */}
                   <div className="flex-1 overflow-y-auto pr-1.5 space-y-3 custom-scrollbar">
                     {songHistory.length > 0 ? (
                       songHistory.map((item, index) => (
@@ -307,7 +351,7 @@ const RadioView = () => {
                   </div>
                 </div>
 
-                {/* Zona de Carátula con Efecto Aura */}
+                {/* ZONA DE CARÁTULA CON EFECTO AURA */}
                 <div className="relative mb-8 group/cover mt-2">
                   <div className={`absolute inset-0 bg-[#3D6599]/30 rounded-3xl blur-xl transition-transform duration-1000 scale-95 ${isPlaying ? 'animate-pulse scale-105' : ''}`} />
                   
