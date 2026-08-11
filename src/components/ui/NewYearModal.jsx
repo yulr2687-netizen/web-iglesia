@@ -1,164 +1,91 @@
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, Radio, Wrench } from 'lucide-react';
 import Logo from '../../assets/img/flogo.png';
 
-const NewYearModal = () => {
+const RadioMaintenanceModal = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [status, setStatus] = useState('countdown');
-  const [typedText, setTypedText] = useState("");
-  
-  // Fechas exactas de control
-  const anniversaryDate = new Date("2026-05-27T00:00:00").getTime();
-  const endDate = new Date("2026-06-01T00:00:00").getTime(); // El 1 de junio desaparece
 
-  // Lógica principal de tiempo y visibilidad
+  // Control de entrada del modal con animación suave
   useEffect(() => {
-    const now = new Date().getTime();
-    
-    if (now >= endDate) {
-      setIsOpen(false);
-      return;
-    }
-
-    const timer = setTimeout(() => setIsVisible(true), 200);
-    
-    const calculateTime = () => {
-      const currentTime = new Date().getTime();
-      
-      if (currentTime >= endDate) {
-        setIsOpen(false);
-        return;
-      }
-      
-      if (currentTime >= anniversaryDate) {
-        setStatus('anniversary');
-      } else {
-        setStatus('countdown');
-        const difference = anniversaryDate - currentTime;
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        });
-      }
-    };
-
-    const interval = setInterval(calculateTime, 1000);
-    calculateTime();
-
-    return () => {
-      clearTimeout(timer);
-      clearInterval(interval);
-    };
+    const timer = setTimeout(() => setIsVisible(true), 150);
+    return () => clearTimeout(timer);
   }, []);
-
-  // Efecto de Máquina de Escribir (Solo se activa en el aniversario)
-  useEffect(() => {
-    if (status === 'anniversary') {
-      
-      const message = "28 años de gracia, fe y restauración. Una historia escrita por Dios, recordando cada momento vivido desde nuestra fundación hasta ahora. El legado continúa vivo en cada corazón...";
-      let i = 0;
-      const typing = setInterval(() => {
-        setTypedText(message.slice(0, i));
-        i++;
-        if (i > message.length) clearInterval(typing);
-      }, 60);
-      
-      return () => clearInterval(typing);
-    }
-  }, [status]);
 
   if (!isOpen) return null;
 
   const handleClose = () => {
     setIsVisible(false);
-    setTimeout(() => setIsOpen(false), 600);
+    setTimeout(() => setIsOpen(false), 500);
   };
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 pointer-events-none">
       
-      {/* Fondo borroso (Backdrop adaptado a tema claro/oscuro) */}
+      {/* 1. Fondo Borroso (Backdrop adaptativo a tema Claro / Oscuro) */}
       <div
-        className={`absolute inset-0 bg-white/40 dark:bg-black/60 backdrop-blur-sm transition-opacity duration-700 pointer-events-auto ${isVisible ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 bg-slate-900/30 dark:bg-black/75 backdrop-blur-md transition-opacity duration-500 pointer-events-auto ${
+          isVisible ? "opacity-100" : "opacity-0"
+        }`}
         onClick={handleClose}
       />
 
-      {/* Contenedor Principal (Adaptado a tema claro/oscuro) */}
-      <div className={`relative w-full max-w-md bg-white dark:bg-[#0a0908] rounded-3xl shadow-2xl overflow-hidden border border-stone-200 dark:border-white/10 transition-all duration-700 ease-out pointer-events-auto
-        ${isVisible ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-8"}`}>
+      {/* 2. Contenedor Principal (Mantiene posición y bordes adaptativos) */}
+      <div className={`relative w-full max-w-md bg-white/95 dark:bg-[#0d0f12]/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-stone-200/80 dark:border-white/10 transition-all duration-500 ease-out pointer-events-auto overflow-hidden
+        ${isVisible ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-6"}`}>
         
-        {/* Iluminación sutil en las esquinas */}
+        {/* Iluminación sutil de fondo (Glows adaptados al tema de radio) */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div className="absolute -top-16 -right-16 w-48 h-48 bg-[#3D6599]/20 blur-[50px] rounded-full"></div>
-            <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-yellow-500/10 blur-[50px] rounded-full"></div>
+          <div className="absolute -top-20 -right-20 w-52 h-52 bg-amber-500/15 dark:bg-amber-500/10 blur-[60px] rounded-full"></div>
+          <div className="absolute -bottom-20 -left-20 w-52 h-52 bg-[#3D6599]/20 dark:bg-[#3D6599]/15 blur-[60px] rounded-full"></div>
         </div>
 
-        {/* Botón de Cerrar */}
-        <button onClick={handleClose} className="absolute top-4 right-4 p-2 text-stone-400 dark:text-white/30 hover:text-stone-700 dark:hover:text-white transition-colors z-50">
-          <X size={20} />
+        {/* 3. Botón de Cerrar (Posición exacta) */}
+        <button 
+          onClick={handleClose} 
+          aria-label="Cerrar modal"
+          className="absolute top-4 right-4 p-2.5 rounded-full text-stone-400 dark:text-stone-400 hover:text-stone-800 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-white/5 transition-all z-50"
+        >
+          <X size={18} />
         </button>
 
         <div className="relative z-10 p-8 md:p-10 flex flex-col items-center text-center">
           
-          {/* Logo */}
+          {/* 4. Logo con Halo Animado (Posición exacta) */}
           <div className="mb-6 relative flex items-center justify-center">
-            {/* Halo giratorio */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-yellow-500/40 via-transparent to-[#3D6599]/40 animate-[spin_4s_linear_infinite] blur-sm scale-110"></div>
+            {/* Halo pulsante de señal */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-500/30 via-[#3D6599]/40 to-amber-500/30 animate-[spin_6s_linear_infinite] blur-md scale-110"></div>
             
-            <div className="relative bg-stone-100 dark:bg-[#151210] p-4 rounded-full border border-stone-200 dark:border-white/5 shadow-inner">
-              <img src={Logo} alt="Logo" className="w-16 h-16 object-contain" />
+            <div className="relative bg-white dark:bg-[#14171d] p-4 rounded-full border border-stone-200 dark:border-white/10 shadow-lg">
+              <img src={Logo} alt="Logo Radio" className="w-16 h-16 object-contain" />
             </div>
           </div>
 
-          {status === 'countdown' ? (
-            <>
-              {/* VISTA DE ESPERA */}
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-stone-800 dark:text-white leading-tight mb-2">
-                Camino al <span className="text-yellow-600 dark:text-yellow-500/90 font-normal italic">Aniversario</span>
-              </h2>
-              <p className="text-stone-500 dark:text-stone-400 text-sm max-w-[260px] mx-auto mb-8 leading-relaxed">
-                Preparándonos para celebrar 28 años de fidelidad y propósito.
-              </p>
+          {/* 5. Título Principal */}
+          <h2 className="font-serif text-2xl md:text-3xl font-bold text-stone-900 dark:text-white leading-tight mb-2">
+            Radio Online <br />
+            <span className="text-amber-600 dark:text-amber-400 font-normal italic">en Mantenimiento</span>
+          </h2>
 
-              {/* Contador */}
-              <div className="flex justify-center gap-6 w-full mb-4">
-                {[
-                  { label: 'DÍAS', val: timeLeft.days },
-                  { label: 'HRS', val: timeLeft.hours },
-                  { label: 'MIN', val: timeLeft.minutes },
-                  { label: 'SEG', val: timeLeft.seconds }
-                ].map((item, i) => (
-                  <div key={i} className="flex flex-col items-center">
-                    <div className="text-2xl md:text-3xl font-serif font-bold text-stone-800 dark:text-white mb-1">
-                      {item.val < 10 ? `0${item.val}` : item.val}
-                    </div>
-                    <span className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-500">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            </>
-          ) : (
-            <>
-              {/* VISTA DE CELEBRACIÓN (Día 27 al 31) */}
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-stone-800 dark:text-white leading-tight mb-6">
-                Feliz <span className="text-yellow-600 dark:text-yellow-500/90 font-normal italic">28°</span> Aniversario
-              </h2>
-              
-              {/* Contenedor más amplio para el mensaje nuevo */}
-              <div className="min-h-[120px] flex items-start justify-center mb-2">
-                <p className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed max-w-[300px]">
-                  {typedText}
-                  <span className="animate-pulse inline-block w-1 h-4 ml-1 bg-yellow-500 align-middle"></span>
-                </p>
-              </div>
-            </>
-          )}
+          {/* Subtítulo / Descripción */}
+          <p className="text-stone-600 dark:text-stone-300 text-sm max-w-[280px] mx-auto mb-6 leading-relaxed">
+            Estamos realizando ajustes técnicos para brindarles una mejor calidad, como también cambios internos para futuras trasmisiones en vivo.
+          </p>
 
-          {/* NUEVA UBICACIÓN: Letra fina, cursiva y en la parte inferior */}
+          {/* 6. Indicador de Estado (Ocupa la posición donde estaba el contador) */}
+          <div className="w-full bg-stone-50/80 dark:bg-white/[0.03] border border-stone-200/80 dark:border-white/10 rounded-2xl p-4 mb-2 flex items-center justify-center gap-3 shadow-inner">
+            <div className="relative flex items-center justify-center">
+              <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+            </div>
+            
+            <div className="flex items-center gap-2 text-stone-700 dark:text-stone-200 text-xs font-medium tracking-wide">
+              <Radio size={15} className="text-amber-600 dark:text-amber-400 animate-pulse" />
+              <span>Transmisión pausada temporalmente</span>
+            </div>
+          </div>
+
+          {/* 7. Footer inferior (Posición exacta) */}
           <div className="w-full mt-6">
             <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-stone-300 dark:via-[#3D6599]/40 to-transparent mb-3"></div>
             <h3 className="text-stone-500 dark:text-[#C7DBEB] font-medium tracking-widest text-[9px] md:text-[10px] uppercase italic opacity-90">
@@ -172,4 +99,4 @@ const NewYearModal = () => {
   );
 };
 
-export default NewYearModal;
+export default RadioMaintenanceModal;
