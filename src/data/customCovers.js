@@ -19,4 +19,6 @@ export const customCovers = {
     "Jehova Jireh" : "/covers/coros6.jpg?v=1",
 
     "la hora novena" : "/covers/cou.jpg?v=1",
+
+    "la voz del triunfo" : "/covers/logo.png?v=1"
 };

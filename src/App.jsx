@@ -7,7 +7,7 @@ import Footer from './components/layout/Footer';
 
 // --- IMPORTS UI GLOBALES ---
 import InitialLoader from './components/ui/InitialLoader';
-import NewYearModal from './components/ui/NewYearModal';
+//import NewYearModal from './components/ui/NewYearModal';
 import { PrivacyPolicyModal, TermsOfUseModal } from './components/ui/Modals';
 
 // --- CUSTOM HOOKS ---
@@ -216,7 +216,7 @@ const App = () => {
           {/* MODALES REUTILIZABLES */}
           <PrivacyPolicyModal isOpen={isPrivacyModalOpen} onClose={() => setIsPrivacyModalOpen(false)} />
           <TermsOfUseModal isOpen={isTermsModalOpen} onClose={() => setIsTermsModalOpen(false)} />
-          <NewYearModal />
+          {/*<NewYearModal />*/}
 
         </div>
       )}

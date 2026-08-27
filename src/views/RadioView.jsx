@@ -11,9 +11,13 @@ const RadioView = () => {
   const volumeRef = useRef(null);
   const playerCardRef = useRef(null);
   const currentSongRef = useRef("");
-  const errorTimerRef = useRef(null);
-  const waitingForLiveRef = useRef(false);
-  const isLiveModeRef = useRef(false);
+  const radioModeRef = useRef("AUTO_DJ")
+  const liveCandidateSinceRef = useRef(null);
+  const autoDjCandidateSinceRef = useRef(null);
+  const metadataMissingSinceRef = useRef(null);
+
+  const LIVE_TITLE = "En Vivo";
+  const LIVE_ARTIST = "La Voz Del Triunfo Pentecostal";
 
   const normalizeSongName = (text) => {
     return (text || "")
@@ -47,7 +51,8 @@ const RadioView = () => {
   
   const [coverUrl, setCoverUrl] = useState(Logo);
   const [songHistory, setSongHistory] = useState([]);
-  const [isLive] = useState(true);
+  const [radioMode, setRadioMode] = useState("AUTO_DJ");
+  const isLive = radioMode === "LIVE";
 
   const formatPlayedTime = (date) => {
 
@@ -106,109 +111,216 @@ const RadioView = () => {
     const fetchMetadata = async () => {
       try {
         const response = await fetch(
-          "https://player.extassisnetwork.com/api.php?url=https://radios.mipanel.stream:6924/stream"
+          "https://player.extassisnetwork.com/api.php?url=https://radios.mipanel.stream:6924/stream",
+          {
+            cache: "no-store",
+          }
         );
 
         const data = await response.json();
 
-        if (data.error) {
+        // 1. DETECTAR SI EXTASSIS ESTÁ ENTREGANDO INFORMACIÓN
+        const hasArtist = Boolean(data?.artist?.trim());
+        const hasSong = Boolean(data?.song?.trim());
 
-          // MOSTRANDO EL LIVE
-          if (isLiveModeRef.current) {
-            return;
+        const artist = data?.artist?.trim()?.toLowerCase() || "";
+        const song = data?.song?.trim()?.toLowerCase() || "";
+        const title = data?.title?.trim()?.toLowerCase() || "";
+        const songTitle = data?.songtitle?.trim()?.toLowerCase() || "";
+
+        const isExtassisLive =
+        artist === "en vivo" &&
+        (
+          song.includes("live broadcast") ||
+          title.includes("live broadcast") ||
+          songTitle.includes("live broadcast")
+        );
+
+        const isAutoDj = hasSong && hasArtist && !isExtassisLive;
+
+        // 2. LIVE DETECTADO
+        if (isExtassisLive) {
+
+          autoDjCandidateSinceRef.current = null;
+          metadataMissingSinceRef.current = null;
+
+          if (!liveCandidateSinceRef.current) {
+            liveCandidateSinceRef.current = Date.now();
           }
 
-          // ESPERANDO CONFIRMAR LIVE
-          if (!waitingForLiveRef.current) {
+          const liveDuration = Date.now() - liveCandidateSinceRef.current;
 
-            waitingForLiveRef.current = true;
+          if (radioModeRef.current !== "LIVE" && liveDuration >= 10000) {
+            radioModeRef.current = "LIVE";
+            setRadioMode("LIVE");
 
-            errorTimerRef.current = setTimeout(() => {
+            // IMPORTANTE:
+            // Limpiamos cualquier canción anterior
+            currentSongRef.current = "";
 
-              isLiveModeRef.current = true;
+            // FORZAMOS LOS DATOS DEL LIVE
+            setNowPlaying({
+              title: LIVE_TITLE,
+              artist: LIVE_ARTIST,
+            });
 
-              setNowPlaying({
-                title: "En Vivo",
-                artist: "La Voz Del Triunfo Pentecostal"
-              });
+            // FORZAMOS EL LOGO DE LA IGLESIA
+            setCoverUrl(Logo);
 
-              setCoverUrl(Logo);
+            setIsChangingSong(false);
+          }
 
-            }, 10000);
+          if (radioModeRef.current === "LIVE") {
+            setNowPlaying({
+              title: LIVE_TITLE,
+              artist: LIVE_ARTIST,
+            });
 
+            setCoverUrl(Logo);
           }
 
           return;
         }
 
-        // METADATA OBTENIDA CORRECTAMENTE
-        if (errorTimerRef.current) {
+        // 3. AUTO DJ DETECTADO
 
-          clearTimeout(errorTimerRef.current);
-          errorTimerRef.current = null;
+        if (isAutoDj) {
+          liveCandidateSinceRef.current = null;
+          metadataMissingSinceRef.current = null;
+
+          if (!autoDjCandidateSinceRef.current) {
+            autoDjCandidateSinceRef.current = Date.now();
+          }
+
+          const autoDjDuration = Date.now() - autoDjCandidateSinceRef.current;
+
+          if (radioModeRef.current === "LIVE" && autoDjDuration < 10000) {
+            return;
+          }
+
+          if (radioModeRef.current === "LIVE") {
+            radioModeRef.current = "AUTO_DJ";
+            setRadioMode("AUTO_DJ");
+
+            currentSongRef.current = "";
+          }
+
+          const songIdentifier = `${data.artist}-${data.song}`;
+
+          if (data.song && data.artist && songIdentifier !== currentSongRef.current) {
+            currentSongRef.current = songIdentifier;
+
+            setIsChangingSong(true);
+
+            setTimeout(() => {
+              setNowPlaying({
+                title: data.song,
+                artist: data.artist,
+              });
+
+              setIsChangingSong(false);
+            }, 300);
+          }
+
+          const songKey = normalizeSongName(data.song);
+
+          const matchedKey = Object.keys(customCovers).find((key) =>
+            songKey.includes(normalizeSongName(key))
+          );
+
+          if (matchedKey) {
+            setCoverUrl(customCovers[matchedKey]);
+          } else if (data.cover?.trim()) {
+            setCoverUrl(data.cover);
+          }
+
+          if (data.song_history) {
+            setSongHistory((prevHistory) => {
+              return data.song_history
+                .slice(1, 11)
+                .map((item, index) => {
+                  const existingSong = prevHistory.find(
+                    (old) =>
+                      old?.song?.title === item?.song?.title &&
+                      old?.song?.artist === item?.song?.artist
+                  );
+
+                  return {
+                    ...item,
+                    playedAt:
+                      existingSong?.playedAt ||
+                      new Date(Date.now() - index * 180000),
+                  };
+                });
+            });
+          }
+
+          return;
         }
 
-        waitingForLiveRef.current = false;
+        // 4. EXTASSIS NO DEVUELVE INFORMACIÓN
+        liveCandidateSinceRef.current = null;
+        autoDjCandidateSinceRef.current = null;
 
-        isLiveModeRef.current = false;
+        if (!metadataMissingSinceRef.current) {
+          metadataMissingSinceRef.current = Date.now();
+        }
 
-        const songIdentifier = `${data.artist}-${data.song}`;
+        const missingDuration =
+          Date.now() - metadataMissingSinceRef.current;
 
-        if (data.song && data.artist && songIdentifier !== currentSongRef.current) {
-          currentSongRef.current = songIdentifier;
-          setIsChangingSong(true);
+        if (missingDuration >= 10000) {
 
-          setTimeout (() => {
-            setNowPlaying({
-              title: data.song,
-              artist: data.artist,
+          radioModeRef.current = "LIVE";
+          setRadioMode("LIVE");
+
+          currentSongRef.current = "";
+
+          setNowPlaying({
+            title: LIVE_TITLE,
+            artist: LIVE_ARTIST,
           });
+
+          setCoverUrl(Logo);
 
           setIsChangingSong(false);
-          }, 300);
         }
 
-        const songKey = normalizeSongName(data.song);
-        const matchedKey = Object.keys(customCovers).find((key) => songKey.includes(normalizeSongName(key)));
-      
-        if (matchedKey) {
-          setCoverUrl(customCovers[matchedKey]);
-        } else if (data.cover?.trim()) {
-          setCoverUrl(data.cover);
-        }
-
-        if (data.song_history) {
-          setSongHistory((prevHistory) => {
-            return data.song_history
-            .slice(1, 11)
-            .map((item, index) => {
-              const existingSong = prevHistory.find(
-                (old) =>
-                  old?.song?.title === item?.song?.title &&
-                  old?.song?.artist === item?.song?.artist
-              );
-
-              return {
-                ...item,
-                playedAt: existingSong?.playedAt || new Date(Date.now() - index * 180000)
-              };
-            });
-          });
-        }
       } catch (error) {
         console.error("Error obteniendo metadata:", error);
 
-        setNowPlaying({
-          title: "Radio en Vivo",
-          artist: "Transmisión 24/7",
-        });
+        liveCandidateSinceRef.current = null;
+        autoDjCandidateSinceRef.current = null;
 
-        setCoverUrl(Logo);
+        if (!metadataMissingSinceRef.current) {
+          metadataMissingSinceRef.current = Date.now();
+        }
+
+        const missingDuration =
+          Date.now() - metadataMissingSinceRef.current;
+
+        if (missingDuration >= 10000) {
+
+          radioModeRef.current = "LIVE";
+          setRadioMode("LIVE");
+
+          currentSongRef.current = "";
+
+          setNowPlaying({
+            title: LIVE_TITLE,
+            artist: LIVE_ARTIST,
+          });
+
+          setCoverUrl(Logo);
+
+          setIsChangingSong(false);
+        }
       }
     };
 
     fetchMetadata();
-    const interval = setInterval(fetchMetadata, 5000);
+
+    const interval = setInterval(fetchMetadata, 4000);
 
     return () => clearInterval(interval);
   }, []);
@@ -235,12 +347,13 @@ const RadioView = () => {
           {/* LADO IZQUIERDO: INFORMACIÓN */}
           <RevealOnScroll direction="right">
             <div className="text-center lg:text-left space-y-6">
-              {isLive && (
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200/60 dark:border-red-900/40 text-xs font-black tracking-wider uppercase animate-pulse shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-red-500 shadow-sm shadow-red-500"></span>
-                  TRANSMISIÓN CONTINUA
-                </div>
-              )}
+              <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase animate-pulse shadow-sm transition-all duration-500 ${
+                isLive ? "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200/60 dark:border-red-900/40"
+                : "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200/60 dark:border-blue-900/40"}`}>
+                <span className={`w-2 h-2 rounded-full animate-pulse shadow-sm ${isLive ? "bg-red-500 shadow-red-500" : "bg-blue-500 shadow-blue-500"}`}></span>
+                  {isLive ? "EN VIVO" : "TRANSMISIÓN CONTINUA"}
+              </div>
+              
               
               <h1 className="font-serif text-5xl md:text-7xl font-black text-stone-900 dark:text-white tracking-tight leading-none">
                 {radioData.stationName}
