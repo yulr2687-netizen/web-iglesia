@@ -3,7 +3,7 @@ import { Play, Pause, Volume2, VolumeX, Radio, Mic2, RadioTower, ListMusic, X, H
 import RevealOnScroll from '../components/ui/RevealOnScroll';
 import { RADIO_CONFIG } from "../data/radioConfig";
 import { radioData } from "../data/mockData";
-import Logo from '../assets/img/logo.png';
+import Logo from '../assets/img/rlogo.png';
 import { customCovers } from '../data/customCovers';
 
 const RadioView = () => {

@@ -42,7 +42,7 @@ const Header = ({
           className="flex items-center gap-3 group cursor-pointer" 
           onClick={(e) => { e.preventDefault(); handleNavigation('inicio'); }}
         >
-          <div className={`transform transition-all duration-300 group-hover:scale-105 ${isScrolled ? 'p-1.5' : 'p-2'}`}>
+          <div className={`relative z-10 transform transition-all duration-300 group-hover:scale-105 ${isScrolled ? 'p-0' : 'p-0'}`}>
             <LogoSVG />
           </div>
           <div>

@@ -6,7 +6,7 @@ const Logo = () => {
     <img
       src={logo}
       alt="Logo Iglesia"
-      className="w-10 h-10 rounded-full object-cover"
+      className="w-12 h-12 object-contain scale-125 origin-center"
     />
   );
 };
